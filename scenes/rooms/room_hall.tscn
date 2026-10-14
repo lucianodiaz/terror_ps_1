@@ -18,7 +18,7 @@
 [ext_resource type="Resource" path="res://resources/data/flags/hall_lever_puzzle.tres" id="14_lvrpz"]
 [ext_resource type="Script" uid="uid://bo0ayl5kfowl6" path="res://scripts/system/flags/flag_trigger.gd" id="15_73jyg"]
 [ext_resource type="Script" uid="uid://ixxw4jkukhy7" path="res://resources/components/hit_component.gd" id="18_f288s"]
-[ext_resource type="PackedScene" uid="uid://4ig2h3371jr7" path="res://scenes/items/pain_relief.tscn" id="19_fuvmd"]
+[ext_resource type="PackedScene" uid="uid://by1yah08w6ysj" path="res://scenes/enemy/enemy_test.tscn" id="20_i34dg"]
 
 [sub_resource type="Resource" id="Resource_fovi2"]
 script = ExtResource("2_tndhx")
@@ -74,7 +74,7 @@ size = Vector3(6.9540253, 6.275009, 13.620047)
 size = Vector3(3.8561401, 4.8954773, 4.0739136)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ot17w"]
-size = Vector3(0.651741, 1, 0.5683899)
+size = Vector3(0.58395576, 1, 0.5296707)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gicyx"]
 size = Vector3(5.728943, 1, 9.228027)
@@ -192,7 +192,7 @@ size = Vector3(21.346283, 10.425293, 40.047745)
 material = SubResource("StandardMaterial3D_3ph1d")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="building/CSGCombiner3D/CSGBox3D" unique_id=1248208797]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18684769, -0.0435791, 0.37971973)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18654215, -0.043064594, 0.3799839)
 operation = 2
 size = Vector3(20.780334, 9.330627, 37.932625)
 material = SubResource("StandardMaterial3D_3ph1d")
@@ -368,7 +368,7 @@ target_camera = NodePath("../FixedCameraZD")
 metadata/_custom_type_script = "uid://dvnjgm08m7rhc"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CameraZones/ZoneD/CameraTriggerZone" unique_id=585807979]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0062446594, 0.9025097, -0.001449585)
+transform = Transform3D(0.9999999, 0, 0, 0, 0.9999667, 0, 0, 0, 0.9999999, -0.011630057, 0.90250874, -0.09012985)
 shape = SubResource("BoxShape3D_ot17w")
 debug_color = Color(0.98039216, 0, 0.3882353, 1)
 
@@ -537,12 +537,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1820679, 0.80511475, 0)
 shape = SubResource("BoxShape3D_oojqf")
 debug_color = Color(0.74509805, 0.46666667, 0, 1)
 
-[node name="PainRelief" parent="." unique_id=2058366338 instance=ExtResource("19_fuvmd")]
-transform = Transform3D(0.9999945, -0.0029215873, 0.0015801248, 0.0029197172, 0.99999505, 0.0011883772, -0.0015835775, -0.0011837725, 0.9999981, 9.067482, 0.35366037, -9.469297)
-examine_text = "Es un medicamento para el dolor, la fecha de vencimiento esta borrada..."
-
-[node name="PainRelief2" parent="." unique_id=1772768819 instance=ExtResource("19_fuvmd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.943201, 0.36697605, -10.570478)
-
-[node name="PainRelief3" parent="." unique_id=507446138 instance=ExtResource("19_fuvmd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.348434, 0.3535141, -11.364365)
+[node name="EnemyTest" parent="." unique_id=87509372 instance=ExtResource("20_i34dg")]
+transform = Transform3D(-0.9531325, 0, 0.30255303, 0, 1, 0, -0.30255303, 0, -0.9531325, 8.059209, 3.5895355, -18.277248)

@@ -46,6 +46,9 @@ func set_damaged_walk_speed() -> void:
 func reset_speed() -> void:
     current_speed = walk_speed
 
+func is_running() -> bool:
+    return current_speed == run_speed or current_speed == damaged_run_speed
+
 func stop_movement() -> void:
     ## Next time the player moves we want a fresh snapshot, the camera may have
     ## changed while they were in a puzzle or a room transition

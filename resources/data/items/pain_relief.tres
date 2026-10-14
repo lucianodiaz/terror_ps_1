@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b0f3xnpsqfrk1"]
 
 [ext_resource type="Texture2D" uid="uid://gor858eref85" path="res://assets/icons/heal.png" id="1_udsc0"]
-[ext_resource type="PackedScene" uid="uid://trp44lqna52n" path="res://assets/models/PillBottle_Gdt.glb" id="2_uuc1u"]
+[ext_resource type="PackedScene" uid="uid://4ig2h3371jr7" path="res://scenes/items/pain_relief.tscn" id="2_uuc1u"]
 [ext_resource type="Script" uid="uid://cf6x1ssvsiw4u" path="res://resources/data/items/effects/heal_effect.gd" id="3_heal"]
 [ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="4_iujd0"]
 [ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="5_effect"]

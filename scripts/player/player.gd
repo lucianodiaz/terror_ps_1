@@ -2,11 +2,18 @@
 class_name Player
 extends CharacterBody3D
 
-@export var animation_player: AnimationPlayer
+const HIT_REQUEST := &"parameters/HitShot/request"
+const HIT_ACTIVE := &"parameters/HitShot/active"
+
+## Its locomotion StateMachine reads is_moving, is_running and is_moving_backward
+## through advance expressions, so advance_expression_base_node points at this node
+@export var animation_tree: AnimationTree
 
 @export_group("Components")
 @export var movement_player_component: MovementPlayerComponent
 @export var health_component: HealthComponent
+@export var velocity_component: VelocityComponent
+
 
 
 ## Door or any node with an interact() method (Pickup, FlagTrigger, ...)
@@ -14,8 +21,22 @@ var current_interactable: Node = null
 
 var is_in_puzzle: bool = false
 
+var is_moving: bool = false
+var is_running: bool = false
+var is_moving_backward: bool = false
+
+## Covers the frame between the hit request and the OneShot reporting itself active
+var _hit_requested: bool = false
+
+var is_hurt: bool:
+	get:
+		return _hit_requested or (animation_tree != null and animation_tree.get(HIT_ACTIVE))
+
 func _ready() -> void:
-	pass
+	if animation_tree:
+		animation_tree.active = true
+	if health_component:
+		health_component.on_health_changed.connect(_on_health_changed)
 
 
 func _input(event: InputEvent) -> void:
@@ -55,17 +76,34 @@ func _process(delta: float) -> void:
 	pass
 
 func _physics_process(delta: float) -> void:
-	if is_in_puzzle:
-		return
-	if movement_player_component:
+	if _hit_requested and animation_tree.get(HIT_ACTIVE):
+		_hit_requested = false
+
+	if is_hurt:
+		movement_player_component.stop_movement()
+	elif not is_in_puzzle and movement_player_component:
 		movement_player_component.movement(delta)
-		if movement_player_component.get_velocity().length() > 0.1 && !is_in_puzzle:
-			if movement_player_component.run_speed == movement_player_component.current_speed:
-				animation_player.play("run")
-			else:
-				animation_player.play("walk")
-		else:
-			animation_player.play("idle")
+	_update_locomotion_state()
+
+
+func _update_locomotion_state() -> void:
+	if velocity_component == null or movement_player_component == null:
+		return
+	var horizontal_velocity: Vector3 = velocity_component.velocity
+	horizontal_velocity.y = 0.0
+
+	is_moving = not is_in_puzzle and not is_hurt \
+		and horizontal_velocity.length() > velocity_component.velocity_threshold
+	is_running = is_moving and movement_player_component.is_running()
+	is_moving_backward = is_moving and horizontal_velocity.dot(-global_basis.z) < 0.0
+
+
+func _on_health_changed(_current_health: float, dmg_received: float) -> void:
+	if animation_tree == null or dmg_received <= 0.0 or health_component.is_died:
+		return
+	animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	_hit_requested = true
+	movement_player_component.stop_movement()
 
 
 func _interact() -> void:
