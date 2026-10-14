@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bo5w0v2hcry15"]
+
+[ext_resource type="Script" uid="uid://cxta5bs85dgmh" path="res://scripts/system/rooms/door_transition.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="2_4paal"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rbbk3"]
+albedo_texture = ExtResource("2_4paal")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="Environment" id="Environment_black"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.6
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.6, -2.5)]
+}
+
+[sub_resource type="Animation" id="Animation_open"]
+resource_name = "open"
+length = 1.7666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5, 0.6666667, 0.8333333, 1, 1.2, 1.4333333, 1.7666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.6, -2.5), Vector3(0, 1.6, -2.5), Vector3(0, 1.725, -1.682), Vector3(0, 1.851, -1.477), Vector3(0, 1.837, -0.701), Vector3(0, 2.398, 0.002), Vector3(0, 1.997, 0.836), Vector3(0, 2.758, 1.626), Vector3(0, 3.4, 3.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_stair"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"open": SubResource("Animation_open")
+}
+
+[node name="stair_up_transition" type="Node3D" unique_id=520358010 node_paths=PackedStringArray("camera", "animation_player")]
+script = ExtResource("1_script")
+camera = NodePath("Camera3D")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="." unique_id=86925385]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.5, 0, 0)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 1.8, 2.5, 1.8, 2.5, 1.5, 2, 1.5, 2, 1.2, 1.5, 1.2, 1.5, 0.9, 1, 0.9, 1, 0.6, 0.5, 0.6, 0.5, 0.3, 0, 0.3)
+depth = 3.0
+material = SubResource("StandardMaterial3D_rbbk3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=213829083]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 6, -4)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=855851752]
+transform = Transform3D(-1, 0, 0, 0, 0.9848, -0.1736, 0, -0.1736, -0.9848, 0, 1.6, -2.5)
+environment = SubResource("Environment_black")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1869779271]
+libraries/ = SubResource("AnimationLibrary_stair")

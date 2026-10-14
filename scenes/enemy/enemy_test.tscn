@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://by1yah08w6ysj"]
+
+[ext_resource type="PackedScene" uid="uid://buadmjtx2owpe" path="res://assets/models/enemy/MonsterPSX.glb" id="1_51t2m"]
+[ext_resource type="Script" uid="uid://deywd30ixlyns" path="res://resources/components/arrow_component.gd" id="2_ff0m2"]
+[ext_resource type="Script" uid="uid://bk6s72oclxny5" path="res://resources/components/velocity_component.gd" id="3_2dnkt"]
+[ext_resource type="Script" uid="uid://qm16whgptbth" path="res://resources/components/health_component.gd" id="4_2n5m3"]
+[ext_resource type="Script" uid="uid://bkc1c187ngmkf" path="res://resources/components/hurt_component.gd" id="5_3tsdu"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jcaxs"]
+radius = 0.2758789
+height = 1.7548828
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lerit"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_2dnkt"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yoop1"]
+radius = 0.34472656
+height = 1.6621094
+
+[node name="EnemyTest" type="CharacterBody3D" unique_id=87509372]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1793452341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.122558594, 0)
+shape = SubResource("CapsuleShape3D_jcaxs")
+
+[node name="MonsterPSX2" parent="." unique_id=379042521 instance=ExtResource("1_51t2m")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -1.060153, 0)
+
+[node name="Skeleton3D" parent="MonsterPSX2/MonsterPSX_Rig" parent_id_path=PackedInt32Array(379042521, 466101152) index="0" unique_id=686645867]
+bones/0/position = Vector3(-1.4383459e-05, -0.037109245, 0.31064186)
+bones/0/rotation = Quaternion(0.00013232366, 0.7070493, 0.7071642, -0.00014861049)
+bones/1/position = Vector3(0.016352575, 0.07781011, 0.8258164)
+bones/1/rotation = Quaternion(0.0962823, 0.898965, 0.42653885, 0.0256208)
+bones/2/position = Vector3(0.00015321802, 7.828201e-05, 6.933202e-05)
+bones/2/rotation = Quaternion(-0.023600494, 0.042918604, -0.02175184, 0.99856293)
+bones/3/position = Vector3(-0.00031825434, 0.15573733, -5.1967094e-05)
+bones/3/rotation = Quaternion(0.051649295, -0.0075287395, 0.05643544, 0.99704105)
+bones/4/position = Vector3(0.00028684543, 0.22620466, -0.00014573662)
+bones/4/rotation = Quaternion(0.1255068, -0.10557628, 0.0013630587, 0.98645824)
+bones/5/position = Vector3(-0.0004124641, 0.18674654, 0.00065848726)
+bones/5/rotation = Quaternion(0.22158185, 0.06438604, 0.06706398, 0.97069997)
+bones/6/position = Vector3(0.0002240708, 0.07768477, 0.0019347253)
+bones/6/rotation = Quaternion(-0.14542693, -0.13038398, -0.13349716, 0.9716119)
+bones/7/position = Vector3(0.0015378903, 0.15772855, -8.726085e-05)
+bones/7/rotation = Quaternion(-0.18805988, -0.59648776, -0.58981586, 0.5108357)
+bones/8/rotation = Quaternion(-0.1261535, -0.16924608, 0.58050036, 0.7864226)
+bones/9/rotation = Quaternion(-0.82973, 4.8736993e-08, -5.5419925e-08, 0.558165)
+bones/10/rotation = Quaternion(-0.23113903, -0.67769504, 0.101345725, 0.690676)
+bones/11/position = Vector3(0.00031137496, 0.1566999, -0.00179483)
+bones/11/rotation = Quaternion(-0.113451295, 0.5549364, 0.46671182, 0.6792308)
+bones/12/rotation = Quaternion(-0.4220724, 0.50217164, 0.04446019, 0.75346005)
+bones/13/rotation = Quaternion(-0.7247528, -1.9447587e-08, -5.826234e-08, 0.689009)
+bones/14/rotation = Quaternion(-0.04278586, 0.8638295, 0.14630395, 0.48016995)
+bones/15/rotation = Quaternion(-0.24305992, 0.5617797, 0.77389264, -0.16252881)
+bones/16/rotation = Quaternion(-0.32476062, -2.334115e-08, 6.2504554e-08, 0.9457963)
+bones/17/rotation = Quaternion(0.10545479, 0.8983433, 0.27500558, 0.32593006)
+bones/18/position = Vector3(-0.00019701243, 0.13776352, 0.00035763741)
+bones/18/rotation = Quaternion(-0.45257053, -0.21765439, 0.12239542, 0.85605246)
+bones/19/rotation = Quaternion(0.12783997, 0.23495959, 0.95808506, 0.10258683)
+bones/20/rotation = Quaternion(-0.29686671, -1.1382681e-08, -9.48025e-09, 0.9549189)
+bones/21/rotation = Quaternion(-0.11331737, 0.8581328, 0.48127538, -0.13835229)
+bones/22/position = Vector3(-0.00038821012, 0.13512821, 0.00044711126)
+bones/22/rotation = Quaternion(-0.3520013, 0.4089716, -0.23063084, 0.80972016)
+bones/23/position = Vector3(0.14446679, 0.19596583, 0.123220876)
+bones/23/rotation = Quaternion(0.9184808, -0.25380102, -0.25305226, 0.1671604)
+bones/24/position = Vector3(0.75412667, 0.48940662, -0.26434118)
+bones/24/rotation = Quaternion(-0.0050776987, 0.0012226647, 0.0022615811, 0.9999839)
+bones/25/position = Vector3(-0.11315261, 0.1978302, 0.16280301)
+bones/25/rotation = Quaternion(0.94280267, 0.21542227, 0.2153052, 0.13549973)
+bones/26/position = Vector3(-0.7892929, 0.65510595, 0.15531108)
+bones/26/rotation = Quaternion(-0.0005105764, -0.00045034543, 0.0045334143, 0.9999895)
+bones/27/position = Vector3(-0.18377654, 0.309784, 0.13960768)
+bones/27/rotation = Quaternion(2.9172515e-05, 0.87499833, -0.48412597, -0.0003790274)
+bones/28/position = Vector3(0.08013601, 0.48050365, 0.44910845)
+bones/29/position = Vector3(0.17604119, -0.26310846, 0.14674003)
+bones/29/rotation = Quaternion(0.009540693, 0.79072344, -0.60708725, -0.07817059)
+bones/30/position = Vector3(-0.0015801192, 0.49056494, 0.47224626)
+
+[node name="ArrowComponent" type="MeshInstance3D" parent="." unique_id=2076016964]
+material_override = SubResource("StandardMaterial3D_lerit")
+mesh = SubResource("ImmediateMesh_2dnkt")
+script = ExtResource("2_ff0m2")
+metadata/_custom_type_script = "uid://deywd30ixlyns"
+
+[node name="VelocityComponent" type="Node" parent="." unique_id=982437008]
+script = ExtResource("3_2dnkt")
+metadata/_custom_type_script = "uid://bk6s72oclxny5"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1784183874]
+script = ExtResource("4_2n5m3")
+metadata/_custom_type_script = "uid://qm16whgptbth"
+
+[node name="HurtComponent" type="Area3D" parent="." unique_id=756921841]
+script = ExtResource("5_3tsdu")
+metadata/_custom_type_script = "uid://bkc1c187ngmkf"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtComponent" unique_id=1644266906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16894531, 0)
+shape = SubResource("CapsuleShape3D_yoop1")
+debug_color = Color(0.9843137, 0, 0.36078432, 1)
+
+[editable path="MonsterPSX2"]

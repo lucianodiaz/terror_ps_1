@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://b6guwt2rxlgxt"]
+
+[ext_resource type="Script" uid="uid://1nbn32vts0e0" path="res://scripts/core/world.gd" id="1_nnsk1"]
+[ext_resource type="PackedScene" uid="uid://cwx6wseibf0ps" path="res://scenes/player.tscn" id="2_rwgxs"]
+[ext_resource type="Environment" uid="uid://byekj6fta0bv" path="res://assets/new_environment.tres" id="3_4wyf3"]
+
+[sub_resource type="Compositor" id="Compositor_4wyf3"]
+
+[sub_resource type="Animation" id="Animation_rwgxs"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_4wyf3"]
+resource_name = "in"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_k0juu"]
+resource_name = "out"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_71j4m"]
+_data = {
+&"RESET": SubResource("Animation_rwgxs"),
+&"in": SubResource("Animation_4wyf3"),
+&"out": SubResource("Animation_k0juu")
+}
+
+[node name="World" type="Node3D" unique_id=631908278 node_paths=PackedStringArray("animation_player")]
+script = ExtResource("1_nnsk1")
+initial_scene = "room_hall"
+animation_player = NodePath("TransitionView/AnimationPlayer")
+
+[node name="Player" parent="." unique_id=652551237 instance=ExtResource("2_rwgxs")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2011551823]
+environment = ExtResource("3_4wyf3")
+compositor = SubResource("Compositor_4wyf3")
+
+[node name="TransitionView" type="Control" parent="." unique_id=848267193]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="TransitionView" unique_id=2120543244]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TransitionView" unique_id=1706986347]
+libraries/ = SubResource("AnimationLibrary_71j4m")

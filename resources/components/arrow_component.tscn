@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c7dij3vcndo8c"]
+
+[ext_resource type="Script" uid="uid://deywd30ixlyns" path="res://resources/components/arrow_component.gd" id="1_y7w74"]
+
+[node name="ArrowComponent" type="MeshInstance3D" unique_id=2141814455]
+script = ExtResource("1_y7w74")
+arrow_length = 1.2
+shaft_radius = 0.03
+head_length = 0.22
+head_radius = 0.11
+arrow_color = Color(1, 0.2, 0.2, 1)
+hidden_in_game = true
+editor_only = true

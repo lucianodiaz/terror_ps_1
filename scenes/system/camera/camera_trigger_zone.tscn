@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://16gual4pni0d"]
+
+[ext_resource type="Script" uid="uid://dvnjgm08m7rhc" path="res://scripts/system/camera/camera_trigger_zone.gd" id="1_jvrd6"]
+
+[node name="CameraTriggerZone" type="Area3D" unique_id=8547621]
+collision_layer = 4
+script = ExtResource("1_jvrd6")

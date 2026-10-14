@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dd5jrid5m8buy"]
+
+[ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="1_data"]
+[ext_resource type="Texture2D" uid="uid://bux3emtqqsa1s" path="res://assets/icons/ico_clock_tower_memo.png" id="1_tjusk"]
+[ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="2_myfyw"]
+[ext_resource type="PackedScene" uid="uid://bkmxc1lerde8y" path="res://scenes/items/clock_tower_memo.tscn" id="2_ouckv"]
+
+[resource]
+script = ExtResource("1_data")
+item_id = "clock_tower_memo"
+display_name = "Folleto de la torre"
+description = "Parece un folleto de la torre del reloj. Alguien subrayo la hora del ultimo campanazo con tinta roja."
+icon = ExtResource("1_tjusk")
+kind = 1
+model = ExtResource("2_ouckv")
+pages = PackedStringArray()

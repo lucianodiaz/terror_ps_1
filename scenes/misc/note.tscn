@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bwvsk44k5rjod"]
+
+[ext_resource type="Script" uid="uid://cu136j1o8li6w" path="res://scripts/system/items/examinable.gd" id="1_054sp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jcaxs"]
+radius = 1.0579357
+
+[node name="Note" type="Area3D" unique_id=1722410625]
+collision_layer = 64
+script = ExtResource("1_054sp")
+examine_text = "Vale quisieras hacer un Retro Survival horror conmigo >.< xD"
+examine_id = "Note"
+once = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1909433458]
+shape = SubResource("SphereShape3D_jcaxs")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=127623078]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=2129775661]
+size = Vector3(0.33709717, 0.025878906, 0.5904541)

@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://vvx7fn2r0gxm"]
+
+[ext_resource type="Shader" uid="uid://b43kwljm2lx8r" path="res://assets/shaders/grid.gdshader" id="1_p7gya"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_wd862"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hljed"]
+render_priority = 0
+shader = ExtResource("1_p7gya")
+shader_parameter/base_color = Color(1, 0, 0, 1)
+shader_parameter/grid_color = Color(0, 0, 0, 1)
+shader_parameter/grid_size = 2.0
+shader_parameter/line_width = 0.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+
+[node name="CubeStaticMesh" type="MeshInstance3D" unique_id=125648192]
+mesh = SubResource("BoxMesh_wd862")
+surface_material_override/0 = SubResource("ShaderMaterial_hljed")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1615898371]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=408474953]
+shape = SubResource("BoxShape3D_jcaxs")

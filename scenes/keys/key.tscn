@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://3bal8iwsg6fh"]
+
+[ext_resource type="Script" uid="uid://bc0ulywliftbg" path="res://scripts/system/items/pickup.gd" id="1_e5kno"]
+[ext_resource type="Shader" uid="uid://dvewrwerl2spn" path="res://assets/shaders/spark.gdshader" id="2_b6uir"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jcaxs"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcaxs"]
+size = Vector3(0.08728027, 0.10638428, 0.54003906)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_b6uir"]
+size = Vector2(0.5, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jcaxs"]
+render_priority = 0
+shader = ExtResource("2_b6uir")
+shader_parameter/sparkle_color = Color(1, 1, 0.8, 1)
+shader_parameter/thickness = 0.05
+shader_parameter/brightness = 0.50000002049012
+
+[sub_resource type="Animation" id="Animation_b6uir"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spark:surface_material_override/0:shader_parameter/thickness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.05]
+}
+
+[sub_resource type="Animation" id="Animation_grkom"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spark:surface_material_override/0:shader_parameter/thickness")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.10000000405148, 0.20000000298023, 0.10000000405148]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0et3k"]
+_data = {
+&"RESET": SubResource("Animation_b6uir"),
+&"idle": SubResource("Animation_grkom")
+}
+
+[node name="Key" type="Area3D" unique_id=1520058604]
+collision_layer = 64
+script = ExtResource("1_e5kno")
+item_id = "north_key"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2113669003]
+shape = SubResource("SphereShape3D_jcaxs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1845257504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0047329217, -0.031585693, -0.004952237)
+mesh = SubResource("BoxMesh_jcaxs")
+
+[node name="spark" type="MeshInstance3D" parent="." unique_id=903066545]
+transform = Transform3D(0.9647326, 0.2632317, 0, -0.2632317, 0.9647326, 0, 0, 0, 1, 0.024182364, 0.27328172, -0.03655356)
+mesh = SubResource("PlaneMesh_b6uir")
+surface_material_override/0 = SubResource("ShaderMaterial_jcaxs")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=254653953]
+libraries/ = SubResource("AnimationLibrary_0et3k")
+autoplay = &"idle"

@@ -1,0 +1,234 @@
+[gd_scene format=3 uid="uid://51f4oxm10t8y"]
+
+[ext_resource type="Script" uid="uid://bxmxqshovqfa3" path="res://scripts/rooms/room_test_a.gd" id="1_room"]
+[ext_resource type="PackedScene" uid="uid://caa83sbstvovc" path="res://scenes/system/camera/fixed_camera.tscn" id="2_8mjfh"]
+[ext_resource type="Script" uid="uid://5aiypa210bs4" path="res://resources/data/room_state.gd" id="2_ssl2r"]
+[ext_resource type="PackedScene" uid="uid://16gual4pni0d" path="res://scenes/system/camera/camera_trigger_zone.tscn" id="3_cow0f"]
+[ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="4_ocvd4"]
+[ext_resource type="Material" uid="uid://rgf8k618it6y" path="res://assets/materials/test_blue_material.tres" id="4_rn3xe"]
+[ext_resource type="Script" uid="uid://u3u24vtqmxqn" path="res://scripts/system/camera/fixed_follow_camera.gd" id="4_ssl2r"]
+[ext_resource type="PackedScene" uid="uid://dnpgw6prxkvpr" path="res://scenes/rooms/door.tscn" id="7_cow0f"]
+[ext_resource type="Script" uid="uid://dvnjgm08m7rhc" path="res://scripts/system/camera/camera_trigger_zone.gd" id="8_ocvd4"]
+[ext_resource type="Resource" uid="uid://ows2xhuupm2i" path="res://resources/data/flags/hall_east_door.tres" id="8_ssl2r"]
+[ext_resource type="Resource" uid="uid://c686kkh4cnshr" path="res://resources/data/flags/hall_north_door.tres" id="9_fjyh4"]
+[ext_resource type="Script" uid="uid://33tffxfs48to" path="res://scripts/system/camera/fixed_camera.gd" id="9_rn3xe"]
+[ext_resource type="PackedScene" uid="uid://3bal8iwsg6fh" path="res://scenes/keys/key.tscn" id="10_pt6au"]
+[ext_resource type="PackedScene" uid="uid://bkmxc1lerde8y" path="res://scenes/items/clock_tower_memo.tscn" id="14_rn3xe"]
+
+[sub_resource type="Resource" id="Resource_vk0ps"]
+script = ExtResource("2_ssl2r")
+room_id = "room_test_a"
+room_name = "Room Test A"
+spawn_player_position = Vector3(0.59642124, 1.0461657, -1.8191147)
+metadata/_custom_type_script = "uid://5aiypa210bs4"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ocvd4"]
+albedo_texture = ExtResource("4_ocvd4")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+size = Vector3(6.893812, 7.624878, 16.560425)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3ph1d"]
+size = Vector3(9.442817, 7.624878, 16.560425)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ot17w"]
+size = Vector3(9.265991, 5.326782, 8.477844)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gicyx"]
+size = Vector3(5.4969482, 1, 5.5841064)
+
+[sub_resource type="Curve3D" id="Curve3D_4wyf3"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -5.835, 0.209, 5.718, 0, 0, 0, 0, 0, 0, -5.8091574, 2.5203156, -4.359498, 0, 0, 0, 0, 0, 0, -5.7130566, 3.204495, -8.493567),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sye2k"]
+size = Vector3(2.770752, 2.338745, 6.1183167)
+
+[node name="RoomTestA" type="Node3D" unique_id=1897040735]
+script = ExtResource("1_room")
+room_state = SubResource("Resource_vk0ps")
+
+[node name="room" type="Node3D" parent="." unique_id=496742645]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="room" unique_id=898790357]
+use_collision = true
+collision_layer = 8
+collision_mask = 3
+
+[node name="CSGBox3D" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=201417088]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.835785, 5.294922, 5.146881)
+size = Vector3(26.080505, 11.589844, 35.194275)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="room/CSGCombiner3D/CSGBox3D" unique_id=245428651]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.944397, -0.23876953, -0.08543205)
+operation = 2
+size = Vector3(21.101929, 10.010742, 31.676693)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=1160506111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4789886, 5.0654297, 5.5821595)
+size = Vector3(10.391693, 10.103516, 1)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=743053192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3655431, 5.040036, -0.4389038)
+size = Vector3(0.6945801, 10.015198, 11.165894)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=657526187]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.129, 0.69, 8.431)
+size = Vector3(1, 1.2607422, 3.8728027)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=2098587308]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3323555, 5.053117, 11.202698)
+size = Vector3(0.8232422, 10.004883, 10.257385)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="room/CSGCombiner3D/CSGBox3D5" unique_id=1862425323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7731891, -0.52182007)
+operation = 2
+size = Vector3(1, 3.6421509, 7.622986)
+material = SubResource("StandardMaterial3D_ocvd4")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=1687923550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4646316, 0.65959024, 3.6214476)
+size = Vector3(4.7973633, 1, 1)
+material = ExtResource("4_rn3xe")
+
+[node name="zoneA" type="Node3D" parent="." unique_id=1191941281]
+
+[node name="FixedCamera" parent="zoneA" unique_id=2088113209 instance=ExtResource("2_8mjfh")]
+transform = Transform3D(0.87035537, -0.24621207, 0.4264518, 0, 0.8660254, 0.5, -0.49242413, -0.43517768, 0.75374985, 6.0922585, 6.8290415, 4.2673473)
+is_active = true
+
+[node name="CameraTriggerZone" parent="zoneA" unique_id=8547621 node_paths=PackedStringArray("target_camera") instance=ExtResource("3_cow0f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.47895, 0, -1.686718)
+target_camera = NodePath("../FixedCamera")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="zoneA/CameraTriggerZone" unique_id=1208168964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22892666, 3.312439, -2.0012817)
+shape = SubResource("BoxShape3D_jcaxs")
+debug_color = Color(0.9764706, 0, 0, 1)
+
+[node name="zoneB" type="Node3D" parent="." unique_id=1456092123]
+
+[node name="CameraTriggerZone2" parent="zoneB" unique_id=1703740519 node_paths=PackedStringArray("target_camera") instance=ExtResource("3_cow0f")]
+transform = Transform3D(0.99999994, 7.450581e-09, -7.450581e-09, -7.450581e-09, 0.99999994, -2.9802322e-08, 7.450581e-09, -2.9802322e-08, 1, -7.507947, 9.536743e-07, -1.686718)
+target_camera = NodePath("../FixedCamera2")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="zoneB/CameraTriggerZone2" unique_id=1074346167]
+transform = Transform3D(0.9999945, -4.0634163e-14, 4.0856207e-14, 4.0634163e-14, 0.9999945, 0, 4.0412118e-14, -1.6342483e-13, 1, -0.5214243, 3.312438, -1.6458738)
+shape = SubResource("BoxShape3D_3ph1d")
+debug_color = Color(0.9764706, 0, 0, 1)
+
+[node name="FixedCamera2" parent="zoneB" unique_id=1403184403 instance=ExtResource("2_8mjfh")]
+transform = Transform3D(-0.8808932, 0.3120781, -0.35585746, 0, 0.75184035, 0.6593452, 0.47331518, 0.5808127, -0.66229105, -12.46996, 9.319937, -10.3101015)
+
+[node name="zoneC" type="Node3D" parent="." unique_id=622750564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.447726, 1.8405423, 10.037884)
+
+[node name="CameraTriggerZone2" parent="zoneC" unique_id=1149721465 node_paths=PackedStringArray("target_camera") instance=ExtResource("3_cow0f")]
+transform = Transform3D(0.99999994, 7.450581e-09, -7.450581e-09, -7.450581e-09, 0.99999994, -2.9802322e-08, 7.450581e-09, -2.9802322e-08, 1, 0, 0, 0)
+target_camera = NodePath("../FixedCameraZC")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="zoneC/CameraTriggerZone2" unique_id=1323449887]
+transform = Transform3D(0.99994093, -4.3987036e-13, 4.400924e-13, 4.3987036e-13, 0.99994093, 0, 4.3964832e-13, -1.7603696e-12, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_ot17w")
+debug_color = Color(0.9817272, 0, 0.37263715, 0.41960785)
+
+[node name="FixedCameraZC" parent="zoneC" unique_id=743863276 instance=ExtResource("2_8mjfh")]
+transform = Transform3D(0.7632303, 0.3053715, -0.56940997, 0, 0.881267, 0.47261873, 0.6461265, -0.36071694, 0.6726097, -4.1089573, 4.7560644, 10.01985)
+
+[node name="CameraTriggerZone" type="Area3D" parent="zoneC" unique_id=1771006362 node_paths=PackedStringArray("target_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3833709, -0.14202642, 7.4620876)
+script = ExtResource("8_ocvd4")
+target_camera = NodePath("../FixedCameraZC")
+metadata/_custom_type_script = "uid://dvnjgm08m7rhc"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="zoneC/CameraTriggerZone" unique_id=2143307356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.753479, 0, 0.005065918)
+shape = SubResource("BoxShape3D_gicyx")
+debug_color = Color(0.9817732, 0, 0.37223348, 0.41960785)
+
+[node name="zoneD" type="Node3D" parent="." unique_id=1787131612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.805917, 0, 17.950487)
+
+[node name="CameraTriggerZone2" parent="zoneD" unique_id=1135799840 node_paths=PackedStringArray("target_camera") instance=ExtResource("3_cow0f")]
+transform = Transform3D(0.99999994, 7.450581e-09, -7.450581e-09, -7.450581e-09, 0.99999994, -2.9802322e-08, 7.450581e-09, -2.9802322e-08, 1, -7.507947, 9.536743e-07, -1.686718)
+target_camera = NodePath("../Path3D/PathFollow3D/FixedFollowCamera")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="zoneD/CameraTriggerZone2" unique_id=884545227]
+transform = Transform3D(0.99999577, -3.130829e-14, 3.1530334e-14, 3.130829e-14, 0.99999577, 0, 3.1086245e-14, -1.2612134e-13, 1, -0.7311331, 3.312438, -1.645874)
+shape = SubResource("BoxShape3D_jcaxs")
+debug_color = Color(0.9764706, 0, 0, 1)
+
+[node name="Path3D" type="Path3D" parent="zoneD" unique_id=680239612]
+transform = Transform3D(0.999033, -0.043967724, 0, 0.043967724, 0.999033, 0, 0, 0, 1, -2.6977625, 4.802788, 0)
+curve = SubResource("Curve3D_4wyf3")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="zoneD/Path3D" unique_id=2136298645]
+transform = Transform3D(0.9999505, -0.00057322055, -0.0024993767, -2.9102486e-11, 0.9746158, -0.22353913, 0.0025642666, 0.22353068, 0.9746463, -5.835, 0.209, 5.718)
+
+[node name="FixedFollowCamera" type="Camera3D" parent="zoneD/Path3D/PathFollow3D" unique_id=1384299546 node_paths=PackedStringArray("path_3d", "path_follow_3d")]
+transform = Transform3D(0.9990383, 0.011958673, 0.04323055, -0.041795835, -0.10170201, 0.99401623, 0.01628245, -0.9947876, -0.101096325, 0.13196349, 1.5960112, -5.1975956)
+script = ExtResource("4_ssl2r")
+path_3d = NodePath("../..")
+path_follow_3d = NodePath("..")
+follow_rotation = false
+metadata/_custom_type_script = "uid://u3u24vtqmxqn"
+
+[node name="ZoneE" type="Node3D" parent="." unique_id=932710310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.736168, 1.4517941, 17.77754)
+
+[node name="CameraTriggerZone" type="Area3D" parent="ZoneE" unique_id=1372689761 node_paths=PackedStringArray("target_camera")]
+script = ExtResource("8_ocvd4")
+target_camera = NodePath("../FixedCameraZE")
+metadata/_custom_type_script = "uid://dvnjgm08m7rhc"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneE/CameraTriggerZone" unique_id=606934344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.60827637, 0.66937256, -0.19230652)
+shape = SubResource("BoxShape3D_sye2k")
+
+[node name="FixedCameraZE" type="Camera3D" parent="ZoneE" unique_id=1419841302]
+transform = Transform3D(-0.64612216, -0.41289055, 0.6419093, 0, 0.84103864, 0.54097503, -0.763234, 0.34953594, -0.5434137, 3.3236065, 4.676863, -3.3514118)
+script = ExtResource("9_rn3xe")
+metadata/_custom_type_script = "uid://33tffxfs48to"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1908488403]
+transform = Transform3D(1, 0, 0, 0, 0.67911255, 0.7340342, 0, -0.7340342, 0.67911255, 0, 8.979951, 26.382675)
+
+[node name="door" parent="." unique_id=2129813808 instance=ExtResource("7_cow0f")]
+transform = Transform3D(-0.9999674, 0, 0.008078754, 0, 1, 0, -0.008078754, 0, -0.9999674, 0.84697104, 0, 5.805146)
+door_name = "first_door"
+connected_room_name = "room_hall"
+target_door_name = "east_door"
+unlock_flag = ExtResource("8_ssl2r")
+unlockable_from_this_side = true
+
+[node name="door3" parent="." unique_id=297023761 instance=ExtResource("7_cow0f")]
+transform = Transform3D(-0.9999674, 0, 0.008078754, 0, 1, 0, -0.008078754, 0, -0.9999674, 0.8602464, 0, -11.127099)
+door_name = "third_door"
+connected_room_name = "room_hall"
+target_door_name = "north_door"
+locked_by_default = true
+unlock_flag = ExtResource("9_fjyh4")
+
+[node name="door2" parent="." unique_id=2099173088 instance=ExtResource("7_cow0f")]
+transform = Transform3D(-0.021713682, 0, -0.99976426, 0, 1, 0, 0.99976426, 0, -0.021713682, -13.712999, 0, 17.69336)
+door_name = "second_door"
+connected_room_name = "room_hall"
+target_door_name = "west_door"
+
+[node name="Key" parent="." unique_id=1520058604 instance=ExtResource("10_pt6au")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.883, 1.409, 8.534)
+
+[node name="ClockTowerMemo" parent="." unique_id=1933074538 instance=ExtResource("14_rn3xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1104114, 1.1595881, 3.5452762)
+item_id = "marvin_report"

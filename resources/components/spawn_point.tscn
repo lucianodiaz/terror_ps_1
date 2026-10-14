@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://j03rajw4m70x"]
+
+[ext_resource type="Script" uid="uid://deywd30ixlyns" path="res://resources/components/arrow_component.gd" id="1_byt82"]
+[ext_resource type="Script" uid="uid://bgygy27poeqqs" path="res://resources/components/spawn_point.gd" id="1_ixbrr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jcaxs"]
+height = 2.0039063
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ixbrr"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_rbv1w"]
+
+[node name="SpawnPoint" type="Area3D" unique_id=664593945 node_paths=PackedStringArray("collision_shape")]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_ixbrr")
+collision_shape = NodePath("CollisionShape3D")
+capsule_color = Color(0.98039216, 0, 0, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1184343671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001953125, 0)
+shape = SubResource("CapsuleShape3D_jcaxs")
+debug_color = Color(0.98039216, 0, 0, 1)
+
+[node name="ArrowComponent" type="MeshInstance3D" parent="." unique_id=1286444192]
+material_override = SubResource("StandardMaterial3D_ixbrr")
+mesh = SubResource("ImmediateMesh_rbv1w")
+script = ExtResource("1_byt82")
+metadata/_custom_type_script = "uid://deywd30ixlyns"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cgf5mwrnpyxqc"]
+
+[ext_resource type="Texture2D" uid="uid://7wdmdbcxhope" path="res://assets/icons/ico_marvins-report.png" id="1_cjtme"]
+[ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="1_vc45v"]
+[ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="2_cjtme"]
+
+[resource]
+script = ExtResource("1_vc45v")
+item_id = "marvin_report"
+display_name = "Reporte de marvin"
+icon = ExtResource("1_cjtme")
+kind = 1
+pages = PackedStringArray("September 24th\nThere are reports of a theft in the municipal building before dawn. A jewel decorated clock at the main gate was damaged. Two of twelve gems that are installed on the face of the clock are missing.\n\nDue to lack of available officers at this time, I have no choice but to suspend the research of this case.\n\nSigned,\n\nMarvin Branagh", "September 26th\nBased upon an autopsy report of a 42 year old restaurant owner, I have discovered that he has one of the missing gems. He apparently took shelter in the police department at about 10 am, where he was shot to death within 10 minutes of having developed the symptoms.\n\nSince the city is currently under martial law, we are forced to suspend this case. At this time, we\'ll keep the gem as evidence.\n\nSigned,\n\nMarvin Branagh")
+metadata/_custom_type_script = "uid://cw4dnvt3imiw3"

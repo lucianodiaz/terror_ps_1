@@ -1,0 +1,10 @@
+[gd_resource type="Environment" format=3 uid="uid://byekj6fta0bv"]
+
+[resource]
+background_color = Color(0, 0, 0, 0)
+fog_mode = 1
+fog_density = 0.498
+fog_sky_affect = 0.342
+fog_height_density = 0.0625
+fog_depth_curve = 0.7071065
+volumetric_fog_density = 1.215

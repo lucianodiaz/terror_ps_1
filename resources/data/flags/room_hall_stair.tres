@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FlagRef" format=3 uid="uid://byna683okmh5o"]
+
+[ext_resource type="Script" uid="uid://ceqrarnrhta8k" path="res://resources/data/flags/flag_ref.gd" id="1_37nks"]
+
+[resource]
+script = ExtResource("1_37nks")
+scope = 0
+room_id = "room_hall"
+flag_name = "all_doors_opened"
+metadata/_custom_type_script = "uid://ceqrarnrhta8k"

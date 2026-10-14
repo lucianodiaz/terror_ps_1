@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AudioLibrary" format=3 uid="uid://c1y3hdnkc5qh4"]
+
+[ext_resource type="Script" uid="uid://c1og4lkbqqdny" path="res://scripts/core/audio_manager/audio_library.gd" id="1_0mnfe"]
+[ext_resource type="AudioStream" uid="uid://lrdtcfg3xbxc" path="res://assets/audio/Dark-Loop.ogg" id="2_i50kr"]
+
+[resource]
+script = ExtResource("1_0mnfe")
+tracks = Dictionary[String, AudioStream]({
+"dark_room": ExtResource("2_i50kr")
+})
+metadata/_custom_type_script = "uid://c1og4lkbqqdny"

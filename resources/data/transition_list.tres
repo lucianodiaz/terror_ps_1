@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TransitionsPackage" format=3 uid="uid://crw254sjxd1c8"]
+
+[ext_resource type="Script" uid="uid://d1fpku28cli7q" path="res://resources/data/transitions_package.gd" id="1_pkg"]
+[ext_resource type="PackedScene" path="res://scenes/transitions/door_transition.tscn" id="2_door"]
+[ext_resource type="PackedScene" path="res://scenes/transitions/stair_up_transition.tscn" id="3_up"]
+[ext_resource type="PackedScene" uid="uid://bq78u24m31abx" path="res://scenes/transitions/stair_down_transition.tscn" id="4_down"]
+
+[resource]
+script = ExtResource("1_pkg")
+transitions = Dictionary[String, PackedScene]({
+"door": ExtResource("2_door"),
+"stairs_down": ExtResource("4_down"),
+"stairs_up": ExtResource("3_up")
+})

@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://c1t1tfr4l8m2e"]
+
+[ext_resource type="Script" uid="uid://c5br84uidt7ku" path="res://scripts/system/rooms/door.gd" id="2_door"]
+[ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="2_haqs8"]
+[ext_resource type="PackedScene" uid="uid://j03rajw4m70x" path="res://resources/components/spawn_point.tscn" id="3_spawn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02qo0"]
+albedo_texture = ExtResource("2_haqs8")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_area"]
+size = Vector3(3, 2.5, 0.94421387)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+size = Vector3(3.1506348, 1.8057861, 0.55810547)
+
+[node name="stair_door_up" type="Node3D" unique_id=914716051 node_paths=PackedStringArray("spawn_player_position") groups=["doors"]]
+script = ExtResource("2_door")
+spawn_player_position = NodePath("spawn_point")
+transition_type = "stairs_up"
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=257235190]
+collision_layer = 8
+collision_mask = 19
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGCombiner3D" unique_id=1620273253]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.5, 0, 0)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 1.8, 2.5, 1.8, 2.5, 1.5, 2, 1.5, 2, 1.2, 1.5, 1.2, 1.5, 0.9, 1, 0.9, 1, 0.6, 0.5, 0.6, 0.5, 0.3, 0, 0.3)
+depth = 3.0
+material = SubResource("StandardMaterial3D_02qo0")
+
+[node name="AreaStairInteractable" type="Area3D" parent="." unique_id=641345314]
+collision_layer = 64
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaStairInteractable" unique_id=1948738490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.5098902)
+shape = SubResource("BoxShape3D_area")
+
+[node name="spawn_point" type="Marker3D" parent="." unique_id=536024874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -2.398243)
+
+[node name="SpawnPoint" parent="spawn_point" unique_id=659235847 instance=ExtResource("3_spawn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.7684487)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=826836321]
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=678272899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05529785, 0.40289307, 0.22094727)
+shape = SubResource("BoxShape3D_jcaxs")

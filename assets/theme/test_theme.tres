@@ -1,0 +1,17 @@
+[gd_resource type="Theme" format=3 uid="uid://cs4jlpeq1cdcp"]
+
+[ext_resource type="FontFile" uid="uid://d324a8gycn315" path="res://assets/fonts/SpecialElite-Regular.ttf" id="1_mu31g"]
+
+[resource]
+Button/font_sizes/font_size = 25
+Button/fonts/font = ExtResource("1_mu31g")
+Label/font_sizes/font_size = 30
+Label/fonts/font = ExtResource("1_mu31g")
+LineEdit/font_sizes/font_size = 24
+LineEdit/fonts/font = ExtResource("1_mu31g")
+ProgressBar/font_sizes/font_size = 22
+ProgressBar/fonts/font = ExtResource("1_mu31g")
+TabBar/font_sizes/font_size = 23
+TabBar/fonts/font = ExtResource("1_mu31g")
+TextEdit/font_sizes/font_size = 25
+TextEdit/fonts/font = ExtResource("1_mu31g")

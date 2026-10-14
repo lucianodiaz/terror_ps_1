@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://dnpgw6prxkvpr"]
+
+[ext_resource type="Script" uid="uid://c5br84uidt7ku" path="res://scripts/system/rooms/door.gd" id="1_y7h0x"]
+[ext_resource type="Script" uid="uid://deywd30ixlyns" path="res://resources/components/arrow_component.gd" id="2_0ccpe"]
+[ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="2_qv3ua"]
+[ext_resource type="PackedScene" uid="uid://j03rajw4m70x" path="res://resources/components/spawn_point.tscn" id="4_qv3ua"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcaxs"]
+size = Vector3(3.8359833, 4.2840347, 0.2709961)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02qo0"]
+albedo_color = Color(1, 1, 0, 1)
+albedo_texture = ExtResource("2_qv3ua")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+size = Vector3(4.248474, 5.019348, 0.94628906)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sye2k"]
+size = Vector3(4.212616, 5.2732544, 0.5996704)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y7h0x"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_qv3ua"]
+
+[node name="door" type="Node3D" unique_id=2129813808 node_paths=PackedStringArray("spawn_player_position") groups=["doors"]]
+script = ExtResource("1_y7h0x")
+spawn_player_position = NodePath("spawn_point")
+transition_type = "door"
+
+[node name="doorMesh" type="MeshInstance3D" parent="." unique_id=1523080888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0073165894, 2.111805, -0.36450195)
+mesh = SubResource("BoxMesh_jcaxs")
+surface_material_override/0 = SubResource("StandardMaterial3D_02qo0")
+
+[node name="AreaDoorInteractable" type="Area3D" parent="." unique_id=1431903753]
+collision_layer = 64
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaDoorInteractable" unique_id=655456790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16860962, 2.009674, -1.0223258)
+shape = SubResource("BoxShape3D_jcaxs")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1318453732]
+collision_layer = 8
+collision_mask = 19
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1324510086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04032898, 2.1366272, -0.30609798)
+shape = SubResource("BoxShape3D_sye2k")
+debug_color = Color(0.9943697, 0, 0.23045567, 0.41960785)
+
+[node name="ArrowComponent" type="MeshInstance3D" parent="." unique_id=1847186036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8089123, -0.8878379)
+material_override = SubResource("StandardMaterial3D_y7h0x")
+mesh = SubResource("ImmediateMesh_qv3ua")
+script = ExtResource("2_0ccpe")
+arrow_length = 2.0
+shaft_radius = 0.06
+head_length = 0.3
+head_radius = 0.2
+arrow_color = Color(1, 0, 0, 1)
+metadata/_custom_type_script = "uid://deywd30ixlyns"
+
+[node name="spawn_point" type="Marker3D" parent="." unique_id=536024874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9208689, -2.9121969)
+
+[node name="SpawnPoint" parent="spawn_point" unique_id=664593945 instance=ExtResource("4_qv3ua")]

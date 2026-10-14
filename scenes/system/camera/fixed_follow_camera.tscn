@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bx5whyr17xe0j"]
+
+[ext_resource type="Script" uid="uid://u3u24vtqmxqn" path="res://scripts/system/camera/fixed_follow_camera.gd" id="1_m481w"]
+
+[node name="FixedFollowCamera" type="Camera3D" unique_id=806460762]
+script = ExtResource("1_m481w")

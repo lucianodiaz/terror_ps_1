@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://ix2d3ood15xx"]
+
+[ext_resource type="PackedScene" uid="uid://c1t1tfr4l8m2e" path="res://scenes/rooms/stair_door_up.tscn" id="1_0jj0i"]
+[ext_resource type="Script" uid="uid://dhx51h86w807a" path="res://scripts/rooms/room_corridor.gd" id="1_3srqx"]
+[ext_resource type="Script" uid="uid://5aiypa210bs4" path="res://resources/data/room_state.gd" id="2_tkye0"]
+[ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="4_2axxn"]
+[ext_resource type="PackedScene" uid="uid://bwvsk44k5rjod" path="res://scenes/misc/note.tscn" id="5_2axxn"]
+[ext_resource type="PackedScene" uid="uid://j03rajw4m70x" path="res://resources/components/spawn_point.tscn" id="5_q4lhb"]
+[ext_resource type="Script" uid="uid://dvnjgm08m7rhc" path="res://scripts/system/camera/camera_trigger_zone.gd" id="6_pxa84"]
+[ext_resource type="Script" uid="uid://33tffxfs48to" path="res://scripts/system/camera/fixed_camera.gd" id="7_uud4o"]
+[ext_resource type="Script" uid="uid://u3u24vtqmxqn" path="res://scripts/system/camera/fixed_follow_camera.gd" id="8_uud4o"]
+
+[sub_resource type="Resource" id="Resource_3srqx"]
+script = ExtResource("2_tkye0")
+room_id = "room_corridor"
+room_name = "Corridor"
+spawn_player_position = Vector3(-0.11659548, 0.5983462, -4.4650183)
+assign_from_node = NodePath("SpawnPoint")
+metadata/_custom_type_script = "uid://5aiypa210bs4"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2axxn"]
+albedo_texture = ExtResource("4_2axxn")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ba3m"]
+albedo_color = Color(0, 0, 1, 1)
+albedo_texture = ExtResource("4_2axxn")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+size = Vector3(2.7045898, 2.0390625, 4.8066406)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_02qo0"]
+size = Vector3(2.8293457, 1, 5.3797607)
+
+[sub_resource type="Curve3D" id="Curve3D_uud4o"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -0.0051959753, 0.00012207031, -3.3649082, 0, 0, 0, 0, 0, 0, -0.123844564, 1.5139866, -20.189648),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[node name="RoomCorridor" type="Node3D" unique_id=1774019456]
+script = ExtResource("1_3srqx")
+room_state = SubResource("Resource_3srqx")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1811038944]
+calculate_tangents = false
+use_collision = true
+collision_layer = 8
+collision_mask = 3
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=20734243]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03748703, 2.4335938, -14.031036)
+calculate_tangents = false
+flip_faces = true
+size = Vector3(6.1961594, 5.8671875, 30.972351)
+material = SubResource("StandardMaterial3D_2axxn")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=874119157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004276037, 0.100363255, -27.791159)
+operation = 2
+flip_faces = true
+size = Vector3(5.3615875, 1.2026367, 2.227539)
+material = SubResource("StandardMaterial3D_8ba3m")
+
+[node name="Note" parent="CSGCombiner3D" unique_id=907147070 instance=ExtResource("5_2axxn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12925196, 0.714622, -27.265394)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=982745191]
+transform = Transform3D(1, 0, 0, 0, 0.76870936, 0.63959825, 0, -0.63959825, 0.76870936, 0, 0, 0)
+light_color = Color(0, 0, 0, 1)
+sky_mode = 2
+
+[node name="stair_door_up" parent="." unique_id=914716051 instance=ExtResource("1_0jj0i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0598768, -0.32153696, -2.8093266)
+door_name = "stair_up"
+connected_room_name = "room_hall"
+target_door_name = "stair_down"
+
+[node name="SpawnPoint" parent="." unique_id=664593945 instance=ExtResource("5_q4lhb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11659548, 0.5983462, -4.4650183)
+
+[node name="ZoneA" type="Node3D" parent="." unique_id=732653048]
+
+[node name="CameraTriggerZone" type="Area3D" parent="ZoneA" unique_id=1648028253 node_paths=PackedStringArray("target_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.229574)
+script = ExtResource("6_pxa84")
+target_camera = NodePath("FixedCameraZA")
+metadata/_custom_type_script = "uid://dvnjgm08m7rhc"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneA/CameraTriggerZone" unique_id=444404375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004638672, 0.51953125, -0.41601563)
+shape = SubResource("BoxShape3D_jcaxs")
+
+[node name="FixedCameraZA" type="Camera3D" parent="ZoneA/CameraTriggerZone" unique_id=1240003517]
+transform = Transform3D(-0.9999619, 0.0074418876, -0.0045604245, 0, 0.52250105, 0.85263866, 0.008728067, 0.8526062, -0.52248114, -0.13703865, 4.6950684, -3.6086588)
+script = ExtResource("7_uud4o")
+metadata/_custom_type_script = "uid://33tffxfs48to"
+
+[node name="ZoneB" type="Node3D" parent="." unique_id=27595120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.785303)
+
+[node name="CameraTriggerZone" type="Area3D" parent="ZoneB" unique_id=1266813175 node_paths=PackedStringArray("target_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.9340024)
+script = ExtResource("6_pxa84")
+target_camera = NodePath("../Path3D/PathFollow3D/FixedFollowCamera")
+metadata/_custom_type_script = "uid://dvnjgm08m7rhc"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneB/CameraTriggerZone" unique_id=939336031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01574707, 0, -2.3762817)
+shape = SubResource("BoxShape3D_02qo0")
+
+[node name="Path3D" type="Path3D" parent="ZoneB" unique_id=1816709395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7482438, 0)
+curve = SubResource("Curve3D_uud4o")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="ZoneB/Path3D" unique_id=1860053128]
+transform = Transform3D(0.9999661, 0.00063194195, 0.007023427, 5.820713e-11, 0.9959691, -0.08961352, -0.0070517925, 0.089611344, 0.99594384, -0.0051959753, 0.00012207031, -3.3649082)
+
+[node name="FixedFollowCamera" type="Camera3D" parent="ZoneB/Path3D/PathFollow3D" unique_id=667583282 node_paths=PackedStringArray("path_3d", "path_follow_3d")]
+transform = Transform3D(0.9996578, 0.022995465, -0.0125092175, 0, 0.4778578, 0.8784372, 0.026177697, -0.87813663, 0.47769427, -0.12251806, 0.74302816, 0.31315613)
+script = ExtResource("8_uud4o")
+path_3d = NodePath("../..")
+path_follow_3d = NodePath("..")
+camera_distance_behind = 1.0
+follow_rotation = false
+metadata/_custom_type_script = "uid://u3u24vtqmxqn"

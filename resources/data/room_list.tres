@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoomsPackage" format=3 uid="uid://dphnj2ylt6hum"]
+
+[ext_resource type="Script" uid="uid://pe61hobltjbl" path="res://resources/data/rooms_package.gd" id="1_85r5k"]
+[ext_resource type="PackedScene" uid="uid://51f4oxm10t8y" path="res://scenes/rooms/room_test_a.tscn" id="1_g5mww"]
+[ext_resource type="PackedScene" uid="uid://qseea2apmrum" path="res://scenes/rooms/room_hall.tscn" id="2_2yb2b"]
+[ext_resource type="PackedScene" uid="uid://ix2d3ood15xx" path="res://scenes/rooms/room_corridor.tscn" id="3_fm2p2"]
+
+[resource]
+script = ExtResource("1_85r5k")
+rooms = Dictionary[String, PackedScene]({
+"room_corridor": ExtResource("3_fm2p2"),
+"room_hall": ExtResource("2_2yb2b"),
+"room_test_a": ExtResource("1_g5mww")
+})
+metadata/_custom_type_script = "uid://pe61hobltjbl"
