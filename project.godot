@@ -41,7 +41,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg")
+enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/mixamo_animation_retargeter/plugin.cfg", "res://addons/tattomoosa.vision_cone_3d/plugin.cfg")
 
 [file_customization]
 
@@ -153,6 +153,8 @@ inventory={
 3d_physics/layer_7="triggers"
 3d_physics/layer_8="items"
 3d_physics/layer_9="stairs"
+3d_physics/layer_10="vision"
+3d_physics/layer_11="observable"
 
 [physics]
 

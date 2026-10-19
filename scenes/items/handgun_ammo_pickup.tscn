@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://biv1bn3tqsgq6"]
 
 [ext_resource type="Script" uid="uid://bc0ulywliftbg" path="res://scripts/system/items/pickup.gd" id="1_pickup"]
 
@@ -8,15 +8,15 @@ radius = 0.9
 [sub_resource type="BoxMesh" id="BoxMesh_ammo"]
 size = Vector3(0.15, 0.1, 0.1)
 
-[node name="HandgunAmmoPickup" type="Area3D"]
+[node name="HandgunAmmoPickup" type="Area3D" unique_id=336599732]
 collision_layer = 64
 script = ExtResource("1_pickup")
 item_id = "handgun_ammo"
 amount = 15
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=981345251]
 shape = SubResource("SphereShape3D_ammo")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1392716644]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 mesh = SubResource("BoxMesh_ammo")

@@ -28,7 +28,7 @@ const ATTACK_ANIM_NODE : StringName = &"AttackAnim"
 @export var health_component: HealthComponent
 @export var velocity_component: VelocityComponent
 @export var weapon_holder: WeaponHolderComponent
-
+@export var sigth_cone: VisionCone3D
 
 
 ## Door or any node with an interact() method (Pickup, FlagTrigger, ...)
@@ -65,7 +65,16 @@ func _ready() -> void:
 		weapon_holder.weapon_changed.connect(_on_weapon_changed)
 		## The holder is a child, so it equipped before this signal was connected
 		_on_weapon_changed(weapon_holder.current_weapon)
+	
+	if sigth_cone:
+		sigth_cone.body_sighted.connect(_on_body_sighted)
+		sigth_cone.body_hidden.connect(_on_body_hidden)
 
+func _on_body_sighted(body: Node3D) -> void:
+	print("body sighted: ", body.name)
+
+func _on_body_hidden(body: Node3D) -> void:
+	print("body hidden: ", body.name)
 
 func _input(event: InputEvent) -> void:
 	if is_dead:
