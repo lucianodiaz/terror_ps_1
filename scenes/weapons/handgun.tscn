@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/ranged_weapon.gd" id="1_ranged"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_grip"]
+size = Vector3(0.04, 0.12, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_slide"]
+size = Vector3(0.04, 0.05, 0.2)
+
+[node name="handgun" type="Node3D" node_paths=PackedStringArray("muzzle")]
+script = ExtResource("1_ranged")
+muzzle = NodePath("Muzzle")
+
+[node name="Grip" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_grip")
+
+[node name="Slide" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, -0.06)
+mesh = SubResource("BoxMesh_slide")
+
+[node name="Muzzle" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, -0.17)

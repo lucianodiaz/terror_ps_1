@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dpfqi352e60ta"]
+
+[ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="1_item"]
+[ext_resource type="Script" uid="uid://dnptuxujlfr7k" path="res://resources/data/items/weapon_data.gd" id="2_weapon"]
+[ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="2_xp81u"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/handgun.tscn" id="3_scene"]
+
+[sub_resource type="Resource" id="Resource_handgun_weapon"]
+script = ExtResource("2_weapon")
+type = 1
+scene = ExtResource("3_scene")
+aim_animation = &"pistol_idle"
+attack_animation = &"shooting_weapon_pistol"
+damage = 20.0
+cooldown = 0.4
+ammo_item_id = "handgun_ammo"
+initial_loaded = 5
+
+[resource]
+script = ExtResource("1_item")
+item_id = "handgun"
+display_name = "Pistola"
+description = "Una pistola de 9mm. Combinala con balas para recargarla."
+equippable = true
+weapon = SubResource("Resource_handgun_weapon")
+pages = PackedStringArray()

@@ -2,13 +2,15 @@ extends Node
 
 const SLOT_COUNT: int = 8
 const CANT_USE_MESSAGE: String = "No puedo usar esto ahora."
+const CANT_COMBINE_MESSAGE: String = "No se puede combinar."
+const FULL_MAGAZINE_MESSAGE: String = "Ya esta cargada."
 
 signal inventory_changed()
 signal files_changed()
 signal equipment_changed(item_id: String)
 
 ## An empty slot is {}. Occupied slots are { "id": String, "amount": int }.
-var slots: Array[Dictionary] = [{"id": "north_key", "amount": 1}]
+var slots: Array[Dictionary] = []
 var files: Array[String] = []
 ## Empty means nothing equipped
 var equipped_id: String = ""
@@ -114,6 +116,79 @@ func _take_from_slot(slot_index: int) -> void:
 	inventory_changed.emit()
 
 
+## Reloads a ranged weapon when one slot holds it and the other its ammo,
+## in any order. Returns { "combined": bool, "message": String }.
+func combine(slot_a: int, slot_b: int) -> Dictionary:
+	if slot_a == slot_b:
+		return _combine_result(false, CANT_COMBINE_MESSAGE)
+	var a: Dictionary = get_slot(slot_a)
+	var b: Dictionary = get_slot(slot_b)
+	if a.is_empty() or b.is_empty():
+		return _combine_result(false, CANT_COMBINE_MESSAGE)
+	var data_a: ItemData = ItemsPackage.get_item(a["id"])
+	var data_b: ItemData = ItemsPackage.get_item(b["id"])
+	if data_a == null or data_b == null:
+		return _combine_result(false, CANT_COMBINE_MESSAGE)
+
+	var weapon_slot: int = -1
+	var ammo_slot: int = -1
+	if data_a.is_ranged_weapon() and data_a.weapon.ammo_item_id == b["id"]:
+		weapon_slot = slot_a
+		ammo_slot = slot_b
+	elif data_b.is_ranged_weapon() and data_b.weapon.ammo_item_id == a["id"]:
+		weapon_slot = slot_b
+		ammo_slot = slot_a
+	else:
+		return _combine_result(false, CANT_COMBINE_MESSAGE)
+	return _reload(weapon_slot, ammo_slot)
+
+
+func _reload(weapon_slot: int, ammo_slot: int) -> Dictionary:
+	var weapon: Dictionary = slots[weapon_slot]
+	var weapon_data: WeaponData = ItemsPackage.get_item(weapon["id"]).weapon
+	var loaded: int = int(weapon.get("loaded", 0))
+	var missing: int = weapon_data.magazine_size - loaded
+	if missing <= 0:
+		return _combine_result(false, FULL_MAGAZINE_MESSAGE)
+	var taken: int = mini(missing, int(slots[ammo_slot]["amount"]))
+	weapon["loaded"] = loaded + taken
+	slots[ammo_slot]["amount"] -= taken
+	if slots[ammo_slot]["amount"] <= 0:
+		slots[ammo_slot] = {}
+	inventory_changed.emit()
+	return _combine_result(true, "")
+
+
+func _combine_result(combined: bool, message: String) -> Dictionary:
+	return { "combined": combined, "message": message }
+
+
+## Rounds in the magazine of the first slot holding that weapon
+func get_loaded(item_id: String) -> int:
+	var index: int = _find_slot(item_id)
+	return int(slots[index].get("loaded", 0)) if index != -1 else 0
+
+
+## Takes one round from the weapon's magazine, false when it is empty
+func consume_loaded(item_id: String) -> bool:
+	var index: int = _find_slot(item_id)
+	if index == -1:
+		return false
+	var loaded: int = int(slots[index].get("loaded", 0))
+	if loaded <= 0:
+		return false
+	slots[index]["loaded"] = loaded - 1
+	inventory_changed.emit()
+	return true
+
+
+func _find_slot(item_id: String) -> int:
+	for i in SLOT_COUNT:
+		if slots[i].get("id", "") == item_id:
+			return i
+	return -1
+
+
 func equip(item_id: String) -> bool:
 	var data: ItemData = ItemsPackage.get_item(item_id)
 	if data == null or not data.equippable or not has_item(item_id):
@@ -209,6 +284,8 @@ func _place(data: ItemData, amount: int) -> void:
 			continue
 		var add: int = mini(leftover, data.max_stack)
 		slots[i] = { "id": data.item_id, "amount": add }
+		if data.is_ranged_weapon():
+			slots[i]["loaded"] = mini(data.weapon.initial_loaded, data.weapon.magazine_size)
 		leftover -= add
 		if leftover <= 0:
 			return

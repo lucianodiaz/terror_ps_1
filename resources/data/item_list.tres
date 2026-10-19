@@ -6,12 +6,18 @@
 [ext_resource type="Resource" uid="uid://dd5jrid5m8buy" path="res://resources/data/items/clock_tower_memo.tres" id="3_memo"]
 [ext_resource type="Resource" uid="uid://b0f3xnpsqfrk1" path="res://resources/data/items/pain_relief.tres" id="4_herb"]
 [ext_resource type="Resource" uid="uid://cgf5mwrnpyxqc" path="res://resources/data/items/marvin_report.tres" id="5_s0pbp"]
+[ext_resource type="Resource" path="res://resources/data/items/pipe.tres" id="6_pipe"]
+[ext_resource type="Resource" path="res://resources/data/items/handgun.tres" id="7_handgun"]
+[ext_resource type="Resource" path="res://resources/data/items/handgun_ammo.tres" id="8_ammo"]
 
 [resource]
 script = ExtResource("1_pkg")
 items = Dictionary[String, ExtResource("1_5480e")]({
 "clock_tower_memo": ExtResource("3_memo"),
+"handgun": ExtResource("7_handgun"),
+"handgun_ammo": ExtResource("8_ammo"),
 "marvin_report": ExtResource("5_s0pbp"),
 "north_key": ExtResource("2_key"),
-"pain_relief": ExtResource("4_herb")
+"pain_relief": ExtResource("4_herb"),
+"pipe": ExtResource("6_pipe")
 })

@@ -34,6 +34,9 @@ func RetargetMixamoAnimation(id : int):
     if id != retarget_menu_id:
         return
     var selected_paths = EditorInterface.get_selected_paths()
+    if selected_paths.size() == 0:
+        print("No files selected")
+        return
     var fbx_files = Array(selected_paths).filter(func(path): return path.to_lower().ends_with(".fbx"))
     if fbx_files.size() > 0:
         _show_save_dialog(fbx_files)
@@ -41,11 +44,12 @@ func RetargetMixamoAnimation(id : int):
         print("No FBX files selected")
 
 func _show_save_dialog(fbx_paths: Array) -> void:
+    print("Showing save dialog for ", fbx_paths)
     var file_dialog = EditorFileDialog.new()
     file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_DIR
     file_dialog.access = EditorFileDialog.ACCESS_RESOURCES
     file_dialog.title = "Select Export Folder for Animations"
-    
+    file_dialog.current_path = fbx_paths[0]
     file_dialog.connect("dir_selected", Callable(self, "_on_export_folder_selected").bind(fbx_paths))
     file_dialog.connect("canceled", Callable(self, "_on_file_dialog_closed"))
     

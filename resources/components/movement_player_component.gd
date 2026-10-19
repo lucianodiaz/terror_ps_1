@@ -2,12 +2,17 @@ class_name MovementPlayerComponent
 extends Node
 
 @export_group("Gameplay")
-@export_range(0.0, 10.0, 0.1) var walk_speed:float = 4.0
+@export_range(0.0, 10.0, 0.1) var walk_speed:float = 3.5
+@export_range(0.0, 10.0, 0.1) var backward_speed:float = 2.5
 @export_range(0.0, 10.0, 0.1) var run_speed:float = 6.0
+@export_range(0.0, 10.0, 0.1) var run_backward_speed:float = 3.0
 @export_range(0.0, 10.0, 0.1) var aim_speed:float = 4.0
-@export_range(0.0, 10.0, 0.1) var damaged_walk_speed:float = 2.5
-@export_range(0.0, 10.0, 0.1) var damaged_run_speed:float = 3.5
-@export_range(0.0, 10.0, 0.1) var turn_speed:float = 4.0
+
+@export_range(0.0, 10.0, 0.1) var damaged_walk_speed:float = 1.5
+@export_range(0.0, 10.0, 0.1) var damaged_backward_speed:float = 1.5
+@export_range(0.0, 10.0, 0.1) var damaged_run_speed:float = 2.0
+@export_range(0.0, 10.0, 0.1) var damaged_run_backward_speed:float = 1.5
+@export_range(0.0, 10.0, 0.1) var turn_speed:float = 4.5
 
 @export_group("Modern Controls")
 ## How fast the body reorients towards the input direction. Separate from
@@ -36,6 +41,18 @@ func set_run_speed() -> void:
 
 func set_walk_speed() -> void:
     current_speed = walk_speed
+
+func set_backward_speed() -> void:
+    current_speed = backward_speed
+
+func set_run_backward_speed() -> void:
+    current_speed = run_backward_speed
+
+func set_damaged_backward_speed() -> void:
+    current_speed = damaged_backward_speed
+
+func set_damaged_run_backward_speed() -> void:
+    current_speed = damaged_run_backward_speed
 
 func set_damaged_run_speed() -> void:
     current_speed = damaged_run_speed

@@ -1,3 +1,4 @@
+@tool
 ## Heart monitor of the inventory condition box. The trace scrolls from right
 ## to left and fades out at the old end, the color and pace follow the health.
 class_name EcgMonitor

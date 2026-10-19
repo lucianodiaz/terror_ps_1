@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b57nti4om2esi"]
+
+[ext_resource type="Script" uid="uid://1wmctehq583f" path="res://scripts/weapons/melee_weapon.gd" id="1_3h2so"]
+[ext_resource type="Script" uid="uid://ixxw4jkukhy7" path="res://resources/components/hit_component.gd" id="1_5p5mm"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcaxs"]
+size = Vector3(0.07922363, 1.1711426, 0.07623291)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jcaxs"]
+size = Vector3(0.09512329, 0.99942017, 0.11454773)
+
+[node name="weapon_test" type="Node3D" unique_id=98606953 node_paths=PackedStringArray("hit_component")]
+script = ExtResource("1_3h2so")
+hit_component = NodePath("HitComponent")
+
+[node name="pivote" type="Node3D" parent="." unique_id=2038262377]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="pivote" unique_id=1586551303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58957803, 0)
+mesh = SubResource("BoxMesh_jcaxs")
+
+[node name="HitComponent" type="Area3D" parent="." unique_id=511844420]
+collision_layer = 16
+collision_mask = 32
+script = ExtResource("1_5p5mm")
+metadata/_custom_type_script = "uid://ixxw4jkukhy7"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitComponent" unique_id=1349347089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00074768066, 0.702163, -0.003730774)
+shape = SubResource("BoxShape3D_jcaxs")

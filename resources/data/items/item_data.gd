@@ -22,6 +22,8 @@ enum Kind { ITEM, FILE }
 @export var consume_on_use: bool = false
 ## Goes to the EQUIPO box instead of being used, weapons for example
 @export var equippable: bool = false
+## Set on weapons, equipping the item puts this in the player's hand
+@export var weapon: WeaponData = null
 ## For the 3D viewer that comes later, unused for now
 @export var model: PackedScene = null
 
@@ -39,6 +41,14 @@ func is_file() -> bool:
 
 func is_usable() -> bool:
 	return not use_effects.is_empty()
+
+
+func is_weapon() -> bool:
+	return weapon != null
+
+
+func is_ranged_weapon() -> bool:
+	return weapon != null and weapon.is_ranged()
 
 
 ## Title page first, then the text pages

@@ -19,6 +19,9 @@
 [ext_resource type="Script" uid="uid://bo0ayl5kfowl6" path="res://scripts/system/flags/flag_trigger.gd" id="15_73jyg"]
 [ext_resource type="Script" uid="uid://ixxw4jkukhy7" path="res://resources/components/hit_component.gd" id="18_f288s"]
 [ext_resource type="PackedScene" uid="uid://by1yah08w6ysj" path="res://scenes/enemy/enemy_test.tscn" id="20_i34dg"]
+[ext_resource type="PackedScene" path="res://scenes/items/pipe_pickup.tscn" id="21_pipe"]
+[ext_resource type="PackedScene" path="res://scenes/items/handgun_pickup.tscn" id="22_handgun"]
+[ext_resource type="PackedScene" path="res://scenes/items/handgun_ammo_pickup.tscn" id="23_ammo"]
 
 [sub_resource type="Resource" id="Resource_fovi2"]
 script = ExtResource("2_tndhx")
@@ -530,6 +533,7 @@ metadata/_custom_type_script = "uid://33tffxfs48to"
 collision_layer = 16
 collision_mask = 32
 script = ExtResource("18_f288s")
+damage_amount = 50.0
 metadata/_custom_type_script = "uid://ixxw4jkukhy7"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitComponent" unique_id=236045596]
@@ -539,3 +543,15 @@ debug_color = Color(0.74509805, 0.46666667, 0, 1)
 
 [node name="EnemyTest" parent="." unique_id=87509372 instance=ExtResource("20_i34dg")]
 transform = Transform3D(-0.9531325, 0, 0.30255303, 0, 1, 0, -0.30255303, 0, -0.9531325, 8.059209, 3.5895355, -18.277248)
+
+[node name="PipePickup" parent="." instance=ExtResource("21_pipe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1, 5.5)
+pickup_id = "hall_pipe"
+
+[node name="HandgunPickup" parent="." instance=ExtResource("22_handgun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1, 5.5)
+pickup_id = "hall_handgun"
+
+[node name="HandgunAmmoPickup" parent="." instance=ExtResource("23_ammo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 1, 5.5)
+pickup_id = "hall_handgun_ammo"

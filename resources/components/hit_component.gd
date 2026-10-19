@@ -60,6 +60,15 @@ func _on_area_entered(area: Area3D) -> void:
 	
 	emit_signal("on_hit",area)
 
+## Turns the hitbox on and off without touching its layers. Enabling the shapes
+## again makes overlapping hurtboxes report area_entered once more.
+func set_active(active: bool) -> void:
+	set_deferred("monitoring", active)
+	set_deferred("monitorable", active)
+	for child:Node in get_children():
+		if child is CollisionShape3D:
+			child.set_deferred("disabled", not active)
+
 func disable_collision() -> void:
 	collision_layer = 0
 	collision_mask = 0

@@ -222,7 +222,7 @@ func _handle_combine_target(event: InputEvent) -> void:
 		_set_state(State.BROWSE)
 		_refresh()
 	elif event.is_action_pressed("action"):
-		_finish_combine_mockup()
+		_finish_combine()
 
 
 func _handle_check(event: InputEvent) -> void:
@@ -425,8 +425,9 @@ func _apply_use() -> void:
 	_refresh()
 
 
-func _finish_combine_mockup() -> void:
-	_status = "No se puede combinar."
+func _finish_combine() -> void:
+	var result: Dictionary = Inventory.combine(_combine_from, _cursor)
+	_status = result["message"]
 	_combine_from = -1
 	_set_state(State.BROWSE)
 	_refresh()
@@ -503,7 +504,10 @@ func _refresh_slots() -> void:
 			var data: ItemData = ItemsPackage.get_item(slot["id"])
 			icon.texture = data.icon if data else null
 			name_label.text = "" if icon.texture else _item_name(i)
-			amount_label.text = str(slot["amount"]) if int(slot["amount"]) > 1 else ""
+			if data and data.is_ranged_weapon():
+				amount_label.text = str(int(slot.get("loaded", 0)))
+			else:
+				amount_label.text = str(slot["amount"]) if int(slot["amount"]) > 1 else ""
 			equipped_label.visible = Inventory.is_equipped(slot["id"])
 		var style: StyleBoxFlat = _slot_normal
 		if i == _combine_from and _state == State.COMBINE_TARGET:

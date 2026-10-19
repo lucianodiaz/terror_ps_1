@@ -5,6 +5,11 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_jcaxs"]
 radius = 0.9372551
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_jcaxs"]
+top_radius = 0.14404297
+bottom_radius = 0.14404297
+height = 0.47164917
+
 [node name="PainRelief" type="Area3D" unique_id=2058366338]
 collision_layer = 64
 script = ExtResource("1_3yua5")
@@ -12,3 +17,7 @@ item_id = "pain_relief"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=886840538]
 shape = SubResource("SphereShape3D_jcaxs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=809822622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.7641754, 0)
+mesh = SubResource("CylinderMesh_jcaxs")

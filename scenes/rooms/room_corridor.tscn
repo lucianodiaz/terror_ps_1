@@ -68,6 +68,7 @@ material = SubResource("StandardMaterial3D_8ba3m")
 
 [node name="Note" parent="CSGCombiner3D" unique_id=907147070 instance=ExtResource("5_2axxn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12925196, 0.714622, -27.265394)
+examine_text = "Nada importante aqui"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=982745191]
 transform = Transform3D(1, 0, 0, 0, 0.76870936, 0.63959825, 0, -0.63959825, 0.76870936, 0, 0, 0)
@@ -118,7 +119,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7482438, 0)
 curve = SubResource("Curve3D_uud4o")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="ZoneB/Path3D" unique_id=1860053128]
-transform = Transform3D(0.9999661, 0.00063194195, 0.007023427, 5.820713e-11, 0.9959691, -0.08961352, -0.0070517925, 0.089611344, 0.99594384, -0.0051959753, 0.00012207031, -3.3649082)
+transform = Transform3D(0.9999661, 0.000631942, 0.0070234276, 5.820713e-11, 0.9959692, -0.08961353, -0.0070517925, 0.089611344, 0.9959439, -0.0051959753, 0.00012207031, -3.3649082)
 
 [node name="FixedFollowCamera" type="Camera3D" parent="ZoneB/Path3D/PathFollow3D" unique_id=667583282 node_paths=PackedStringArray("path_3d", "path_follow_3d")]
 transform = Transform3D(0.9996578, 0.022995465, -0.0125092175, 0, 0.4778578, 0.8784372, 0.026177697, -0.87813663, 0.47769427, -0.12251806, 0.74302816, 0.31315613)
