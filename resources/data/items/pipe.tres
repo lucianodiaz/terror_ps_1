@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bl8ajx0pq5ltg"]
 
 [ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://brnnvk07d5j7n" path="res://assets/icons/ico_pipe.png" id="1_yrsre"]
 [ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="2_f3yle"]
 [ext_resource type="Script" uid="uid://dnptuxujlfr7k" path="res://resources/data/items/weapon_data.gd" id="2_weapon"]
 [ext_resource type="PackedScene" uid="uid://b57nti4om2esi" path="res://scenes/weapons/weapon_test.tscn" id="3_scene"]
@@ -22,6 +23,7 @@ script = ExtResource("1_item")
 item_id = "pipe"
 display_name = "Tubo de metal"
 description = "Un tubo de metal pesado. Sirve para golpear."
+icon = ExtResource("1_yrsre")
 equippable = true
 weapon = SubResource("Resource_pipe_weapon")
 pages = PackedStringArray()
