@@ -10,6 +10,8 @@ const ANIM_HIT_REACTION := &"hit_reaction"
 @export_range(0.0, 0.3, 0.01, "suffix:s") var hit_blend_time: float = 0.05
 
 
+var is_dead: bool = false
+
 func _ready() -> void:
 	if animation_player:
 		animation_player.animation_finished.connect(_on_animation_finished)
@@ -21,6 +23,7 @@ func _ready() -> void:
 func _on_died(dead:bool) -> void:
 	print("[EnemyTest] - Died")
 	animation_player.play("dying")
+	is_dead = dead
 
 
 func _on_hurt(area: Area3D) -> void:

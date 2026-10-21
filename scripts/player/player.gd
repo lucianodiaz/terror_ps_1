@@ -23,6 +23,17 @@ const ATTACK_ANIM_NODE : StringName = &"AttackAnim"
 ## through advance expressions, so advance_expression_base_node points at this node
 @export var animation_tree: AnimationTree
 
+@export_group("Gameplay")
+@export var skeleton:Skeleton3D
+@export var head_bone_name: StringName = "Head"
+## Radians per second while turning towards current_enemy during aim
+@export var aim_turn_speed: float = 10.0
+## Axis of the head bone that points out of the face, depends on the rig
+@export var head_forward_axis: SkeletonModifier3D.BoneAxis = SkeletonModifier3D.BONE_AXIS_PLUS_Z
+@export_range(0.0, 180.0, 0.1, "radians_as_degrees") var head_look_limit_angle: float = deg_to_rad(70.0)
+## Influence per second while the head blends in and out of looking at observable_object
+@export var head_look_blend_speed: float = 4.0
+
 @export_group("Components")
 @export var movement_player_component: MovementPlayerComponent
 @export var health_component: HealthComponent
@@ -41,6 +52,9 @@ var is_running: bool = false
 var is_moving_backward: bool = false
 var is_dead: bool = false
 
+var current_enemy: Node3D = null
+var observable_object: Node3D = null
+
 ## Covers the frame between the hit request and the OneShot reporting itself active
 var _hit_requested: bool = false
 
@@ -54,6 +68,7 @@ var is_aiming_weapon: bool:
 			and weapon_holder != null and weapon_holder.has_weapon()
 
 var _aim_state: StringName = AIM_STATE_NORMAL
+var _head_look: LookAtModifier3D = null
 
 func _ready() -> void:
 	if animation_tree:
@@ -69,12 +84,32 @@ func _ready() -> void:
 	if sigth_cone:
 		sigth_cone.body_sighted.connect(_on_body_sighted)
 		sigth_cone.body_hidden.connect(_on_body_hidden)
+	_setup_head_look()
+
+## Skeleton modifiers run after the AnimationTree, so the head pose isn't overwritten
+func _setup_head_look() -> void:
+	if skeleton == null:
+		return
+	_head_look = LookAtModifier3D.new()
+	_head_look.bone_name = head_bone_name
+	_head_look.forward_axis = head_forward_axis
+	_head_look.use_angle_limitation = true
+	_head_look.symmetry_limitation = true
+	_head_look.primary_limit_angle = head_look_limit_angle
+	_head_look.secondary_limit_angle = head_look_limit_angle
+	_head_look.duration = 0.3
+	_head_look.influence = 0.0
+	skeleton.add_child(_head_look)
 
 func _on_body_sighted(body: Node3D) -> void:
 	print("body sighted: ", body.name)
+	observable_object = body
 
 func _on_body_hidden(body: Node3D) -> void:
 	print("body hidden: ", body.name)
+
+	if body == observable_object:
+		observable_object = null
 
 func _input(event: InputEvent) -> void:
 	if is_dead:
@@ -132,6 +167,59 @@ func _physics_process(delta: float) -> void:
 		movement_player_component.movement(delta)
 	_update_locomotion_state()
 	_update_aim_state()
+	
+	#look for a closest enemy
+	_find_closest_enemy()
+
+	if current_enemy and movement_player_component.is_aiming:
+		_face_enemy(delta)
+	
+	if observable_object and not movement_player_component.is_aiming:
+		_face_head_to_observable_object(delta)
+	else:
+		_blend_head_look(0.0, delta)
+
+func _find_closest_enemy() -> void:
+	#clear the current enemy
+	if current_enemy and current_enemy.is_dead:
+		current_enemy = null
+	var closest_enemy: Node3D = null
+	var closest_distance: float = 10000
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy.is_dead:
+			continue
+		var distance: float = global_position.distance_to(enemy.global_position)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_enemy = enemy
+	if closest_enemy:
+		current_enemy = closest_enemy
+
+func _face_head_to_observable_object(delta: float) -> void:
+	if _head_look == null:
+		return
+	if not is_instance_valid(observable_object):
+		observable_object = null
+		_blend_head_look(0.0, delta)
+		return
+	_head_look.target_node = _head_look.get_path_to(observable_object)
+	## Fade out instead of snapping to the limit when the object ends up behind the player
+	var target_influence: float = 1.0 if _head_look.is_target_within_limitation() else 0.0
+	_blend_head_look(target_influence, delta)
+
+func _blend_head_look(target_influence: float, delta: float) -> void:
+	if _head_look == null:
+		return
+	_head_look.influence = move_toward(_head_look.influence, target_influence, head_look_blend_speed * delta)
+
+## The body looks down -Z, so the yaw aiming it at dir is atan2(-x, -z)
+func _face_enemy(delta: float) -> void:
+	var direction: Vector3 = current_enemy.global_position - global_position
+	direction.y = 0.0
+	if direction.length_squared() < 0.0001:
+		return
+	var target_yaw: float = atan2(-direction.x, -direction.z)
+	rotation.y = rotate_toward(rotation.y, target_yaw, aim_turn_speed * delta)
 
 
 func _update_locomotion_state() -> void:

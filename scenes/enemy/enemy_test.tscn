@@ -2756,7 +2756,7 @@ vertex_color_use_as_albedo = true
 radius = 0.35253906
 height = 2.7016602
 
-[node name="EnemyTest" type="CharacterBody3D" unique_id=87509372 node_paths=PackedStringArray("health_component", "animation_player")]
+[node name="EnemyTest" type="CharacterBody3D" unique_id=87509372 node_paths=PackedStringArray("health_component", "animation_player") groups=["enemy"]]
 collision_layer = 1026
 collision_mask = 3
 script = ExtResource("1_2n5m3")

@@ -5,6 +5,9 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_jcaxs"]
 radius = 0.71638376
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_yf7os"]
+radius = 0.6337213
+
 [node name="ClockTowerMemo" type="Area3D" unique_id=1933074538]
 collision_layer = 64
 script = ExtResource("1_yf7os")
@@ -18,3 +21,11 @@ shape = SubResource("SphereShape3D_jcaxs")
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=162049336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01044178, 0.019872665, -0.067631096)
 size = Vector3(1, 0.0068359375, 0.59716797)
+
+[node name="PickupObservable" type="StaticBody3D" parent="." unique_id=543484075]
+collision_layer = 1024
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupObservable" unique_id=2086070904]
+shape = SubResource("SphereShape3D_yf7os")
+debug_color = Color(0.9843137, 0, 0.32941177, 1)
