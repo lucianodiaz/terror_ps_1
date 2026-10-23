@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://qm16whgptbth" path="res://resources/components/health_component.gd" id="4_2n5m3"]
 [ext_resource type="Script" uid="uid://bkc1c187ngmkf" path="res://resources/components/hurt_component.gd" id="5_3tsdu"]
 [ext_resource type="Script" uid="uid://cmgcelj1qxg8o" path="res://addons/tattomoosa.vision_cone_3d/src/VisionCone3D.gd" id="7_3tsdu"]
-[ext_resource type="BehaviorTree" path="res://ai/trees/enemy_test.tres" id="8_bt"]
+[ext_resource type="BehaviorTree" uid="uid://dgdofikw2qgxi" path="res://ai/trees/enemy_test.tres" id="8_bt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jcaxs"]
 radius = 0.30322266
@@ -2822,19 +2822,28 @@ advance_expression = "not is_moving"
 advance_mode = 2
 advance_expression = "is_moving and not is_running"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pmy2g"]
+advance_mode = 2
+advance_expression = "is_moving and is_running"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_84pij"]
+advance_mode = 2
+advance_expression = "not is_moving and not is_running
+"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_yoop1"]
 states/Idle_Watchful/node = SubResource("AnimationNodeAnimation_2n5m3")
-states/Idle_Watchful/position = Vector2(359.6, 100.8)
+states/Idle_Watchful/position = Vector2(359.6, 97.75359)
 states/Run_Frantic/node = SubResource("AnimationNodeAnimation_3tsdu")
-states/Run_Frantic/position = Vector2(738.8, 101.7936)
+states/Run_Frantic/position = Vector2(480.40002, -31.8064)
 states/Start/position = Vector2(212, 99.840004)
 states/Walk_Nervous/node = SubResource("AnimationNodeAnimation_yoop1")
 states/Walk_Nervous/position = Vector2(553.80005, 98.71999)
-transitions = ["Start", "Idle_Watchful", SubResource("AnimationNodeStateMachineTransition_3tsdu"), "Idle_Watchful", "Walk_Nervous", SubResource("AnimationNodeStateMachineTransition_xaluj"), "Walk_Nervous", "Run_Frantic", SubResource("AnimationNodeStateMachineTransition_kllrx"), "Walk_Nervous", "Idle_Watchful", SubResource("AnimationNodeStateMachineTransition_2n5m3"), "Run_Frantic", "Walk_Nervous", SubResource("AnimationNodeStateMachineTransition_yoop1")]
+transitions = ["Start", "Idle_Watchful", SubResource("AnimationNodeStateMachineTransition_3tsdu"), "Idle_Watchful", "Walk_Nervous", SubResource("AnimationNodeStateMachineTransition_xaluj"), "Walk_Nervous", "Run_Frantic", SubResource("AnimationNodeStateMachineTransition_kllrx"), "Walk_Nervous", "Idle_Watchful", SubResource("AnimationNodeStateMachineTransition_2n5m3"), "Run_Frantic", "Walk_Nervous", SubResource("AnimationNodeStateMachineTransition_yoop1"), "Idle_Watchful", "Run_Frantic", SubResource("AnimationNodeStateMachineTransition_pmy2g"), "Run_Frantic", "Idle_Watchful", SubResource("AnimationNodeStateMachineTransition_84pij")]
 graph_offset = Vector2(119, -54)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_jcaxs"]
-graph_offset = Vector2(309.76215, 21.228357)
+graph_offset = Vector2(-224.64075, -5.325769)
 nodes/output/position = Vector2(1472, 96)
 nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_yoop1")
 nodes/StateMachine/position = Vector2(-192, 64)
@@ -2868,6 +2877,8 @@ height = 2.7016602
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jcaxs"]
 
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_yoop1"]
+
 [node name="EnemyTest" type="CharacterBody3D" unique_id=87509372 node_paths=PackedStringArray("health_component", "animation_tree", "vision_cone", "velocity_component", "nav_agent", "bt_player") groups=["enemy"]]
 collision_layer = 2
 collision_mask = 3
@@ -2878,6 +2889,7 @@ vision_cone = NodePath("VisionCone3D")
 velocity_component = NodePath("VelocityComponent")
 nav_agent = NodePath("NavigationAgent3D")
 bt_player = NodePath("BTPlayer")
+walk_speed = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1793452341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32666016, 0)
@@ -2888,52 +2900,52 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -
 
 [node name="Skeleton3D" parent="MonsterPSX2/MonsterPSX_Rig" parent_id_path=PackedInt32Array(379042521, 503888147) index="0" unique_id=1257435451]
 bones/0/rotation = Quaternion(0, 0.7071068, 0.7071068, 0)
-bones/1/position = Vector3(0.014281664, -0.022263166, 0.88885075)
-bones/1/rotation = Quaternion(0.0017755448, 0.772609, 0.6348693, -0.00362548)
+bones/1/position = Vector3(0.008044394, -0.015642656, 0.8821393)
+bones/1/rotation = Quaternion(0.003816217, 0.7661278, 0.6425932, -0.010377034)
 bones/2/position = Vector3(3.1395149e-09, -1.345603e-08, 3.8135783e-09)
-bones/2/rotation = Quaternion(0.011981811, -0.022720946, -0.020747496, 0.99945474)
+bones/2/rotation = Quaternion(0.012109701, -0.016808143, -0.013699621, 0.99969155)
 bones/3/position = Vector3(-2.931937e-08, 0.15593058, -4.596968e-08)
-bones/3/rotation = Quaternion(-0.040287916, 0.05212752, 0.051961374, 0.9964736)
+bones/3/rotation = Quaternion(-0.045879945, 0.05479387, 0.056407817, 0.9958468)
 bones/4/position = Vector3(1.1949541e-08, 0.22603068, 4.6372204e-09)
-bones/4/rotation = Quaternion(0.03977673, -0.02340916, -0.023372417, 0.99866086)
+bones/4/rotation = Quaternion(0.014716314, -0.02053522, -0.018404618, 0.9995115)
 bones/5/position = Vector3(8.08002e-09, 0.18705161, -2.3548221e-09)
-bones/5/rotation = Quaternion(0.3011674, -0.030286618, 0.13442095, 0.9435634)
+bones/5/rotation = Quaternion(0.3349095, 0.13816185, 0.022587668, 0.93179226)
 bones/6/position = Vector3(7.600565e-08, 0.07690285, 1.2745101e-08)
-bones/6/rotation = Quaternion(-0.1314477, -0.39413518, 0.106004804, 0.90340585)
+bones/6/rotation = Quaternion(-0.049504522, 0.06984144, -0.29220566, 0.9525163)
 bones/7/position = Vector3(0.00039999836, 0.15806939, -0.0014221064)
-bones/7/rotation = Quaternion(-0.33888996, -0.40959698, -0.45284316, 0.7157633)
-bones/8/rotation = Quaternion(-0.5191504, -0.32244948, 0.13672297, 0.77962565)
-bones/9/rotation = Quaternion(-0.6042993, -2.3683269e-08, -8.988168e-08, 0.7967574)
-bones/10/rotation = Quaternion(-0.009462306, -0.69440037, 0.08449959, 0.71454775)
+bones/7/rotation = Quaternion(-0.32879522, -0.42281374, -0.46180004, 0.70701)
+bones/8/rotation = Quaternion(-0.55953693, -0.32673556, 0.12258944, 0.7517541)
+bones/9/rotation = Quaternion(-0.5479983, 4.804659e-10, -9.6676e-08, 0.8364794)
+bones/10/rotation = Quaternion(-0.02913054, -0.70266145, 0.103366494, 0.70337313)
 bones/11/position = Vector3(0.00040004766, 0.15806939, -0.0014220811)
-bones/11/rotation = Quaternion(-0.22762896, 0.3258406, 0.35596055, 0.8457571)
-bones/12/rotation = Quaternion(-0.55257833, 0.38470602, 0.31747895, 0.66773164)
-bones/13/rotation = Quaternion(-0.62146914, -2.101608e-08, -2.5408703e-08, 0.7834386)
-bones/14/rotation = Quaternion(-0.0053107245, 0.87672406, 0.060018353, 0.47720483)
-bones/15/rotation = Quaternion(-0.1702068, 0.20726576, 0.9578319, -0.10309547)
-bones/16/rotation = Quaternion(-0.295726, -1.7487771e-08, 4.6327987e-08, 0.9552728)
-bones/17/rotation = Quaternion(0.06825911, 0.8783076, 0.43221477, 0.1926313)
+bones/11/rotation = Quaternion(-0.2281643, 0.329305, 0.35631576, 0.8441199)
+bones/12/rotation = Quaternion(-0.55956805, 0.37403858, 0.322741, 0.66544497)
+bones/13/rotation = Quaternion(-0.6059873, -1.75854e-08, -3.229926e-08, 0.7954743)
+bones/14/rotation = Quaternion(-0.0039778496, 0.88030356, 0.07456815, 0.46849707)
+bones/15/rotation = Quaternion(-0.17727491, 0.21307085, 0.95789135, -0.07495812)
+bones/16/rotation = Quaternion(-0.32392517, -1.4682698e-08, 4.7152586e-08, 0.9460828)
+bones/17/rotation = Quaternion(0.061965104, 0.8715924, 0.44785362, 0.18951018)
 bones/18/position = Vector3(1.08687015e-08, 0.13783853, -5.3771823e-09)
 bones/18/rotation = Quaternion(-0.45745334, -0.2168367, 0.12400298, 0.8534293)
-bones/19/rotation = Quaternion(0.14827114, 0.23567334, 0.9594739, 0.043401703)
-bones/20/rotation = Quaternion(-0.2974977, -1.4682231e-08, -4.617671e-09, 0.9547226)
-bones/21/rotation = Quaternion(-0.120816626, 0.88829505, 0.40548643, -0.17865062)
+bones/19/rotation = Quaternion(0.14481175, 0.22906008, 0.96048, 0.06355522)
+bones/20/rotation = Quaternion(-0.32513553, -1.550877e-09, 8.481016e-10, 0.94566745)
+bones/21/rotation = Quaternion(-0.13244195, 0.87792325, 0.42411253, -0.17843357)
 bones/22/position = Vector3(-1.5900367e-08, 0.1355714, -1.582535e-08)
 bones/22/rotation = Quaternion(-0.406613, 0.3887414, -0.27019608, 0.7813707)
-bones/23/position = Vector3(0.11951296, 0.19170216, 0.097327285)
-bones/23/rotation = Quaternion(0.9218706, -0.24698628, -0.26059845, 0.14574292)
+bones/23/position = Vector3(0.11937889, 0.18792813, 0.10617647)
+bones/23/rotation = Quaternion(0.9168567, -0.2535542, -0.2560655, 0.17179823)
 bones/24/position = Vector3(0.5408853, 0.41553256, -0.29987147)
 bones/24/rotation = Quaternion(3.7543906e-09, 4.3944212e-08, -2.328308e-10, 1)
-bones/25/position = Vector3(-0.10385583, 0.19170222, 0.1051273)
-bones/25/rotation = Quaternion(0.9453877, 0.21013457, 0.22186737, 0.11340367)
+bones/25/position = Vector3(-0.10363667, 0.18792808, 0.11397648)
+bones/25/rotation = Quaternion(0.9413526, 0.2157094, 0.21849175, 0.13995032)
 bones/26/position = Vector3(-0.6447719, 0.51122105, 0.052131236)
 bones/26/rotation = Quaternion(3.7543906e-09, 4.3944212e-08, -2.328308e-10, 1)
-bones/27/position = Vector3(-0.19228476, -0.061500013, 0.1397)
+bones/27/position = Vector3(-0.1863386, -0.061500013, 0.1397)
 bones/27/rotation = Quaternion(-2.1699629e-08, 0.868077, -0.49642965, 3.7944847e-08)
-bones/28/position = Vector3(0.078564785, 0.48050362, 0.44910845)
-bones/29/position = Vector3(0.19199969, -0.0638, 0.1397)
-bones/29/rotation = Quaternion(2.1807205e-08, 0.8551939, -0.51233464, -0.07846474)
-bones/30/position = Vector3(-0.0031513346, 0.49056494, 0.47224626)
+bones/28/position = Vector3(0.07597449, 0.48050362, 0.44910845)
+bones/29/position = Vector3(0.19680555, -0.0638, 0.1397)
+bones/29/rotation = Quaternion(2.3298217e-08, 0.8551939, -0.5123345, -0.07846473)
+bones/30/position = Vector3(-0.005741629, 0.49056494, 0.47224626)
 
 [node name="AnimationPlayer" parent="MonsterPSX2" index="32" unique_id=943256983]
 libraries/ = SubResource("AnimationLibrary_pmy2g")
@@ -3011,6 +3023,7 @@ path_height_offset = -1.0
 
 [node name="BTPlayer" type="BTPlayer" parent="." unique_id=1386204517]
 behavior_tree = ExtResource("8_bt")
+blackboard_plan = SubResource("BlackboardPlan_yoop1")
 
 [connection signal="on_hurt" from="HurtComponent" to="." method="_on_hurt"]
 

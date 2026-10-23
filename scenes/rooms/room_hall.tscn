@@ -36,6 +36,10 @@ albedo_texture = ExtResource("3_8fvpx")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_q4spr"]
+vertices = PackedVector3Array(-9.773344, 1.3662605, -28.575333, -9.773344, 1.3662605, -18.325333, 9.976656, 1.3662605, -18.325333, 9.976656, 1.3662605, -28.575333)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ocvd4"]
 albedo_texture = ExtResource("3_8fvpx")
 uv1_triplanar = true
@@ -237,8 +241,6 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_oojqf"]
 size = Vector3(3.3641357, 2.6102295, 1)
 
-[sub_resource type="NavigationMesh" id="NavigationMesh_sye2k"]
-
 [node name="RoomHall" type="Node3D" unique_id=796584797 node_paths=PackedStringArray("all_doors_event", "east_door_event", "animation_player", "camera_animation_all_doors_opened")]
 script = ExtResource("1_fovi2")
 all_doors_event = NodePath("Event")
@@ -270,8 +272,12 @@ operation = 2
 size = Vector3(3.0286255, 1, 3.928772)
 material = SubResource("StandardMaterial3D_3ph1d")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="building/CSGCombiner3D" unique_id=303881428]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.118989944, 1.2649395, -21.678192)
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="building/CSGCombiner3D" unique_id=2118745485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6342747, 1.7764746)
+navigation_mesh = SubResource("NavigationMesh_q4spr")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="building/CSGCombiner3D/NavigationRegion3D" unique_id=303881428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.118989944, -0.36933517, -23.454666)
 size = Vector3(20.784668, 2.5288086, 11.241333)
 material = SubResource("StandardMaterial3D_ocvd4")
 
@@ -634,7 +640,3 @@ pickup_id = "hall_handgun"
 [node name="HandgunAmmoPickup" parent="." unique_id=1304896884 instance=ExtResource("23_ammo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 1, -3.196125)
 pickup_id = "hall_handgun_ammo"
-
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=2118745485]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6342747, 1.7764746)
-navigation_mesh = SubResource("NavigationMesh_sye2k")
