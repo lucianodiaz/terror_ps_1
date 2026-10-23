@@ -17,7 +17,8 @@ attack_animation = &"shooting_weapon_pistol"
 damage = 20.0
 cooldown = 0.4
 ammo_item_id = "handgun_ammo"
-initial_loaded = 5
+magazine_size = 6
+initial_loaded = 6
 
 [resource]
 script = ExtResource("1_item")

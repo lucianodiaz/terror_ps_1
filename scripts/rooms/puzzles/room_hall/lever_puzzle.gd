@@ -70,8 +70,9 @@ func complete_puzzle() -> void:
 	puzzle_gui.player = null
 	puzzle_gui.visible = false
 	#Change To Solve Place state
-	await get_tree().create_timer(0.7).timeout
 	CameraManager.switch_to_camera(puzzle_solved_camera)
+	# await get_tree().create_timer(0.7).timeout
+	
 	await get_tree().create_timer(3).timeout
 	CameraManager.switch_to_last_camera()
 	player.visible = true

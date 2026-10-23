@@ -57,7 +57,7 @@ var observable_object: Node3D = null
 
 ## Covers the frame between the hit request and the OneShot reporting itself active
 var _hit_requested: bool = false
-
+var is_attacking: bool = false
 var is_hurt: bool:
 	get:
 		return _hit_requested or (animation_tree != null and animation_tree.get(HIT_ACTIVE))
@@ -259,10 +259,12 @@ func _try_attack() -> void:
 		return
 	if not weapon_holder.try_attack():
 		return
+	if is_attacking:
+		return
 	var data: WeaponData = weapon_holder.get_weapon_data()
 	if animation_tree and data and data.attack_animation != &"":
 		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-
+	is_attacking = true
 
 func _cancel_attack() -> void:
 	if weapon_holder:
@@ -349,3 +351,7 @@ func _on_entity_died(dead:bool) -> void:
 	if animation_tree:
 		animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 		animation_tree.set(LIFE_STATE_REQUEST, LIFE_STATE_DEAD)
+
+func _on_end_attack() -> void:
+	print("[Player] - End attack")
+	is_attacking = false

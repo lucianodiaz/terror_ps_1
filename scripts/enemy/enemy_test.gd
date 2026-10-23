@@ -61,3 +61,5 @@ func _on_hurt(area: Area3D) -> void:
 
 
 
+func _on_end_attack() -> void:
+	print("[EnemyTest] - End attack")

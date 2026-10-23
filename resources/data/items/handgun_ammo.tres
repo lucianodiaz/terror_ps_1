@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://botwkfup0buxd"]
 
 [ext_resource type="Script" uid="uid://cw4dnvt3imiw3" path="res://resources/data/items/item_data.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://c1vv1hsu1xxvu" path="res://assets/icons/ico_bullets.png" id="1_m3mly"]
 [ext_resource type="Script" uid="uid://c1ahdpawj8c27" path="res://resources/data/items/effects/item_effect.gd" id="2_6cjig"]
 
 [resource]
@@ -8,5 +9,6 @@ script = ExtResource("1_item")
 item_id = "handgun_ammo"
 display_name = "Balas de pistola"
 description = "Balas de 9mm. Combinalas con la pistola para recargarla."
+icon = ExtResource("1_m3mly")
 max_stack = 60
 pages = PackedStringArray()

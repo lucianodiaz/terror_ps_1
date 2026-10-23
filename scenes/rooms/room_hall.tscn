@@ -70,6 +70,14 @@ flag = ExtResource("14_lvrpz")
 int_value = 3
 metadata/_custom_type_script = "uid://bxo3o1xtrdtjk"
 
+[sub_resource type="Resource" id="Resource_rd0d8"]
+script = ExtResource("6_vsaus")
+flag = ExtResource("14_lvrpz")
+metadata/_custom_type_script = "uid://bxo3o1xtrdtjk"
+
+[sub_resource type="QuadMesh" id="QuadMesh_jcaxs"]
+size = Vector2(3.75, 0.52)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_1r8lk"]
 size = Vector3(6.9540253, 6.275009, 13.620047)
 
@@ -138,6 +146,30 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("east_door/Pivot:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.7347674, 1.7449462, -0.544796)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("east_door/Pivot:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_0kpea"]
 resource_name = "open_door"
@@ -167,18 +199,48 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(-0.5548177, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_56dal"]
+resource_name = "unlock_east_door"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("east_door/Pivot:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.39999998, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1.7347674, 1.7449462, -0.544796), Vector3(1.7347674, 1.7449462, -0.544796), Vector3(1.735, 1.745, 0.04)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("east_door/Pivot:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.39999998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -1.5707964)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f288s"]
 _data = {
 &"RESET": SubResource("Animation_8fvpx"),
-&"open_door": SubResource("Animation_0kpea")
+&"open_door": SubResource("Animation_0kpea"),
+&"unlock_east_door": SubResource("Animation_56dal")
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oojqf"]
 size = Vector3(3.3641357, 2.6102295, 1)
 
-[node name="RoomHall" type="Node3D" unique_id=796584797 node_paths=PackedStringArray("all_doors_event", "animation_player", "camera_animation_all_doors_opened")]
+[node name="RoomHall" type="Node3D" unique_id=796584797 node_paths=PackedStringArray("all_doors_event", "east_door_event", "animation_player", "camera_animation_all_doors_opened")]
 script = ExtResource("1_fovi2")
 all_doors_event = NodePath("Event")
+east_door_event = NodePath("east_door/east_door_event")
 animation_player = NodePath("AnimationPlayer")
 camera_animation_all_doors_opened = NodePath("AnimationPlayer/AnimationAllDoor")
 room_state = SubResource("Resource_fovi2")
@@ -269,14 +331,28 @@ transform = Transform3D(1, 0, 0, 0, -0.5967077, 0.8024587, 0, -0.8024587, -0.596
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6294942, 0.9963074, 7.7147074)
 capsule_color = Color(0.96493524, 0, 0.32461447, 1)
 
-[node name="door" parent="." unique_id=2129813808 instance=ExtResource("8_s0wbj")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10.651644, 0, -0.052796356)
+[node name="east_door" parent="." unique_id=2129813808 instance=ExtResource("8_s0wbj")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10.654588, 0.009232044, -0.05417537)
 door_name = "west_door"
 connected_room_name = "room_test_a"
 target_door_name = "second_door"
 locked_by_default = true
 unlock_conditions = Array[ExtResource("6_vsaus")]([SubResource("Resource_rwgxs")])
 locked_message = "Un mecanismo bloquea la puerta"
+
+[node name="east_door_event" type="Area3D" parent="east_door" unique_id=1118980100]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.054174904, -0.009232044, -10.654588)
+script = ExtResource("15_73jyg")
+trigger_id = "east_door_opened"
+mode = 2
+conditions = Array[ExtResource("6_vsaus")]([SubResource("Resource_rd0d8")])
+
+[node name="Pivot" type="Node3D" parent="east_door" unique_id=458333841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7347674, 1.7449462, -0.544796)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="east_door/Pivot" unique_id=658856564]
+transform = Transform3D(-1, 0, 1.5099579e-07, 0, 1, 0, -1.5099579e-07, 0, -1, -1.708244, 0, 0)
+mesh = SubResource("QuadMesh_jcaxs")
 
 [node name="door2" parent="." unique_id=652751234 instance=ExtResource("8_s0wbj")]
 transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, 10.822636, 0, -0.19349836)

@@ -55,6 +55,8 @@ _data = {
 &"idle": SubResource("Animation_grkom")
 }
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_sye2k"]
+
 [node name="Key" type="Area3D" unique_id=1520058604]
 collision_layer = 64
 script = ExtResource("1_e5kno")
@@ -75,3 +77,12 @@ surface_material_override/0 = SubResource("ShaderMaterial_jcaxs")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=254653953]
 libraries/ = SubResource("AnimationLibrary_0et3k")
 autoplay = &"idle"
+
+[node name="ObservableKey" type="StaticBody3D" parent="." unique_id=290437435]
+collision_layer = 1024
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ObservableKey" unique_id=227498038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24469697, 0)
+shape = SubResource("SphereShape3D_sye2k")
+debug_color = Color(0.9851596, 0, 0.34110945, 0.41960785)
