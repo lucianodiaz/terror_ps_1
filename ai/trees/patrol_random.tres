@@ -1,0 +1,29 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://c3c2d4ebjfc55"]
+
+[ext_resource type="Script" uid="uid://q7w32yivj66" path="res://ai/tasks/pick_random_nav_point.gd" id="1_pick"]
+[ext_resource type="Script" uid="uid://bt4u7ps2cria6" path="res://ai/tasks/move_to_position.gd" id="2_move"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_patrol"]
+var/patrol_point/name = &"patrol_point"
+var/patrol_point/type = 9
+var/patrol_point/value = Vector3(0, 0, 0)
+var/patrol_point/hint = 0
+var/patrol_point/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_pick"]
+script = ExtResource("1_pick")
+
+[sub_resource type="BTAction" id="BTAction_move"]
+script = ExtResource("2_move")
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_idle"]
+max_duration = 3.0
+
+[sub_resource type="BTSequence" id="BTSequence_patrol"]
+custom_name = "RandomPatrol"
+children = [SubResource("BTAction_pick"), SubResource("BTAction_move"), SubResource("BTRandomWait_idle")]
+
+[resource]
+description = "Walks to random points on the navmesh around the spawn position."
+blackboard_plan = SubResource("BlackboardPlan_patrol")
+root_task = SubResource("BTSequence_patrol")

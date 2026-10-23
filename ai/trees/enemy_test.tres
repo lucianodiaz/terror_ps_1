@@ -1,0 +1,104 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://dgdofikw2qgxi"]
+
+[ext_resource type="Script" uid="uid://k52v0ngopegv" path="res://ai/tasks/is_stunned.gd" id="1_stunned"]
+[ext_resource type="Script" uid="uid://cjprrhiinqpcs" path="res://ai/tasks/stop_movement.gd" id="2_stop"]
+[ext_resource type="Script" uid="uid://buopdpjog6dp2" path="res://ai/tasks/has_target.gd" id="3_target"]
+[ext_resource type="Script" uid="uid://ct2hjvhb24x5q" path="res://ai/tasks/is_alerted.gd" id="4_alerted"]
+[ext_resource type="Script" uid="uid://by2015ywmwgqd" path="res://ai/tasks/set_alerted.gd" id="5_set_alerted"]
+[ext_resource type="Script" uid="uid://dyjn2ts2f5rub" path="res://ai/tasks/face_target.gd" id="6_face"]
+[ext_resource type="Script" uid="uid://b4b0sh1h0hmyw" path="res://ai/tasks/scream.gd" id="7_scream"]
+[ext_resource type="Script" uid="uid://c3shwwpbnnjxt" path="res://ai/tasks/in_attack_range.gd" id="8_range"]
+[ext_resource type="Script" uid="uid://cplm12pfow48g" path="res://ai/tasks/attack.gd" id="9_attack"]
+[ext_resource type="Script" uid="uid://k2v8c7qatrod" path="res://ai/tasks/chase_target.gd" id="10_chase"]
+[ext_resource type="BehaviorTree" uid="uid://c3c2d4ebjfc55" path="res://ai/trees/patrol_random.tres" id="11_patrol"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_enemy"]
+var/target/name = &"target"
+var/target/type = 24
+var/target/hint = 0
+var/target/hint_string = ""
+var/alerted/name = &"alerted"
+var/alerted/type = 1
+var/alerted/value = false
+var/alerted/hint = 0
+var/alerted/hint_string = ""
+
+[sub_resource type="BTCondition" id="BTCondition_stunned"]
+script = ExtResource("1_stunned")
+
+[sub_resource type="BTAction" id="BTAction_stop_stunned"]
+script = ExtResource("2_stop")
+keep_running = true
+
+[sub_resource type="BTSequence" id="BTSequence_hurt"]
+custom_name = "Hurt"
+children = [SubResource("BTCondition_stunned"), SubResource("BTAction_stop_stunned")]
+
+[sub_resource type="BTCondition" id="BTCondition_target"]
+script = ExtResource("3_target")
+
+[sub_resource type="BTCondition" id="BTCondition_alerted"]
+script = ExtResource("4_alerted")
+
+[sub_resource type="BTAction" id="BTAction_stop_scream"]
+script = ExtResource("2_stop")
+
+[sub_resource type="BTAction" id="BTAction_face_scream"]
+script = ExtResource("6_face")
+
+[sub_resource type="BTAction" id="BTAction_set_alerted"]
+script = ExtResource("5_set_alerted")
+
+[sub_resource type="BTAction" id="BTAction_scream"]
+script = ExtResource("7_scream")
+
+[sub_resource type="BTSequence" id="BTSequence_scream"]
+custom_name = "Scream"
+children = [SubResource("BTAction_stop_scream"), SubResource("BTAction_face_scream"), SubResource("BTAction_set_alerted"), SubResource("BTAction_scream")]
+
+[sub_resource type="BTSelector" id="BTSelector_alert"]
+custom_name = "AlertOnce"
+children = [SubResource("BTCondition_alerted"), SubResource("BTSequence_scream")]
+
+[sub_resource type="BTCondition" id="BTCondition_range"]
+script = ExtResource("8_range")
+
+[sub_resource type="BTAction" id="BTAction_stop_attack"]
+script = ExtResource("2_stop")
+
+[sub_resource type="BTAction" id="BTAction_face_attack"]
+script = ExtResource("6_face")
+max_time = 0.4
+
+[sub_resource type="BTAction" id="BTAction_attack"]
+script = ExtResource("9_attack")
+
+[sub_resource type="BTSequence" id="BTSequence_attack"]
+custom_name = "AttackInRange"
+children = [SubResource("BTCondition_range"), SubResource("BTAction_stop_attack"), SubResource("BTAction_face_attack"), SubResource("BTAction_attack")]
+
+[sub_resource type="BTAction" id="BTAction_chase"]
+script = ExtResource("10_chase")
+
+[sub_resource type="BTSelector" id="BTSelector_engage"]
+custom_name = "Engage"
+children = [SubResource("BTSequence_attack"), SubResource("BTAction_chase")]
+
+[sub_resource type="BTSequence" id="BTSequence_combat"]
+custom_name = "Combat"
+children = [SubResource("BTCondition_target"), SubResource("BTSelector_alert"), SubResource("BTSelector_engage")]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_q4spr"]
+
+[sub_resource type="BTSubtree" id="BTSubtree_patrol"]
+subtree = ExtResource("11_patrol")
+blackboard_plan = SubResource("BlackboardPlan_q4spr")
+custom_name = "Patrol"
+
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_root"]
+children = [SubResource("BTSequence_hurt"), SubResource("BTSequence_combat"), SubResource("BTSubtree_patrol")]
+
+[resource]
+description = "EnemyTest: stun on hit > alert (scream) + chase/attack the player > patrol subtree."
+blackboard_plan = SubResource("BlackboardPlan_enemy")
+root_task = SubResource("BTDynamicSelector_root")

@@ -237,6 +237,8 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_oojqf"]
 size = Vector3(3.3641357, 2.6102295, 1)
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_sye2k"]
+
 [node name="RoomHall" type="Node3D" unique_id=796584797 node_paths=PackedStringArray("all_doors_event", "east_door_event", "animation_player", "camera_animation_all_doors_opened")]
 script = ExtResource("1_fovi2")
 all_doors_event = NodePath("Event")
@@ -385,6 +387,7 @@ unlockable_from_this_side = true
 
 [node name="CameraZones" type="Node3D" parent="." unique_id=1073300449]
 transform = Transform3D(-1.0000001, 0, 8.7422784e-08, 0, 1, 0, -8.7422784e-08, 0, -1.0000001, 0, 0, 0)
+visible = false
 
 [node name="ZoneA" type="Node3D" parent="CameraZones" unique_id=972747478]
 transform = Transform3D(-0.9999999, 0, -8.742276e-08, 0, 1, 0, 8.742276e-08, 0, -0.9999999, 0, 0, 0)
@@ -631,3 +634,7 @@ pickup_id = "hall_handgun"
 [node name="HandgunAmmoPickup" parent="." unique_id=1304896884 instance=ExtResource("23_ammo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 1, -3.196125)
 pickup_id = "hall_handgun_ammo"
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=2118745485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6342747, 1.7764746)
+navigation_mesh = SubResource("NavigationMesh_sye2k")
