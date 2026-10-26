@@ -32,7 +32,7 @@ const BB_ALERTED : StringName = &"alerted"
 @export_range(0.0, 3.0, 0.05, "suffix:s") var hit_stun_time: float = 0.6
 @export_range(0.0, 10.0, 0.1, "suffix:s") var lose_target_time: float = 3.0
 
-
+var spawn_id: String = ""
 var is_dead: bool = false
 var _hit_requested: bool = false
 var is_moving: bool = false
@@ -43,6 +43,9 @@ var target: Node3D
 var _has_destination: bool = false
 var _stun_left: float = 0.0
 var _lose_target_left: float = -1.0
+
+signal on_die
+
 
 func _ready() -> void:
 	if vision_cone:
@@ -71,6 +74,9 @@ func _physics_process(delta: float) -> void:
 	velocity_component.move(self, delta)
 	_face_velocity(delta)
 	_update_locomotion_state()
+	if target and target.is_dead:
+		_clear_target()
+		_lose_target_left = 3.0
 
 func _update_timers(delta: float) -> void:
 	if is_stunned:
@@ -143,6 +149,8 @@ func is_attacking() -> bool:
 func _on_body_sighted(body: Node3D) -> void:
 	print("[EnemyTest] - Body sighted: ", body.name)
 	if is_dead or not body.is_in_group("player"):
+		_clear_target()
+		_lose_target_left = -1.0
 		return
 	_lose_target_left = -1.0
 	target = body
@@ -179,6 +187,7 @@ func _on_died(dead:bool) -> void:
 		animation_tree.set(SCREAM_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 		animation_tree.set(LIFE_STATE_REQUEST, LIFE_STATE_DEAD)
+	on_die.emit(self)
 
 
 

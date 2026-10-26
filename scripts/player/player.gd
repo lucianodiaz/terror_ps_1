@@ -355,3 +355,9 @@ func _on_entity_died(dead:bool) -> void:
 func _on_end_attack() -> void:
 	print("[Player] - End attack")
 	is_attacking = false
+
+func _on_end_hurt() -> void:
+	print("[Player] - End hurt")
+	_hit_requested = false
+	is_hurt = false
+	

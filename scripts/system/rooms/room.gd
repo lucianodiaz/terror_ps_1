@@ -25,6 +25,6 @@ func _ready() -> void:
 
 ## Doors and items persist through GameStateManager flags
 func save_room_state() -> void:
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in get_tree().get_nodes_in_group("enemy"):
 		if enemy.dead and not room_state.dead_spawn_ids.has(enemy.spawn_id):
 			room_state.dead_spawn_ids.append(enemy.spawn_id)
