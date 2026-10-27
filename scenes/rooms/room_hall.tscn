@@ -46,8 +46,20 @@ uv1_triplanar = true
 uv1_world_triplanar = true
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_q4spr"]
-vertices = PackedVector3Array(-9.773344, 1.3662605, -28.575333, -9.773344, 1.3662605, -18.325333, 9.976656, 1.3662605, -18.325333, 9.976656, 1.3662605, -28.575333)
-polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+vertices = PackedVector3Array(3.4244728, 1.3462434, -18.325333, 3.6744728, -0.9037566, -14.075333, 9.924473, -0.9037566, -14.075333, 9.924473, 1.3462434, -28.575333, 3.5078058, 0.8462434, -16.908665, 9.924473, 0.8462434, -16.975332, 9.924473, 1.3462434, -18.425333, -9.825527, 1.3462434, -28.575333, -9.825527, 1.3462434, -18.575333, -3.5755272, 1.3462434, -18.325333, -9.825527, 1.3462434, -17.825333, -10.325527, 1.3462434, -17.575333, -10.325527, -0.9037566, -14.075333, -4.075527, -0.9037566, -14.075333, -4.075527, 1.3462434, -18.075333)
+polygons = [PackedInt32Array(2, 1, 5), PackedInt32Array(5, 1, 6), PackedInt32Array(6, 1, 4), PackedInt32Array(6, 4, 0), PackedInt32Array(6, 0, 3), PackedInt32Array(9, 8, 0), PackedInt32Array(0, 8, 7), PackedInt32Array(0, 7, 3), PackedInt32Array(11, 10, 12), PackedInt32Array(12, 10, 13), PackedInt32Array(13, 10, 14), PackedInt32Array(10, 8, 14), PackedInt32Array(14, 8, 9)]
+geometry_collision_mask = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0kpea"]
+albedo_texture = ExtResource("4_0kpea")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ot17w"]
+material = SubResource("StandardMaterial3D_0kpea")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sye2k"]
+size = Vector3(1.8709717, 0.5037842, 1.8851929)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ocvd4"]
 albedo_texture = ExtResource("3_8fvpx")
@@ -65,17 +77,6 @@ uv1_world_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5il72"]
 size = Vector3(8.028931, 4.6000366, 5.3686066)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0kpea"]
-albedo_texture = ExtResource("4_0kpea")
-uv1_triplanar = true
-uv1_world_triplanar = true
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_ot17w"]
-material = SubResource("StandardMaterial3D_0kpea")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_sye2k"]
-size = Vector3(1.8709717, 0.5037842, 1.8851929)
 
 [sub_resource type="Resource" id="Resource_rwgxs"]
 script = ExtResource("6_vsaus")
@@ -138,7 +139,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("building/misc:position")
+tracks/0/path = NodePath("building/CSGCombiner3D/misc:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -150,7 +151,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("building/misc:rotation")
+tracks/1/path = NodePath("building/CSGCombiner3D/misc:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -190,7 +191,7 @@ length = 4.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("building/misc:position")
+tracks/0/path = NodePath("building/CSGCombiner3D/misc:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -202,7 +203,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("building/misc:rotation")
+tracks/1/path = NodePath("building/CSGCombiner3D/misc:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -286,6 +287,34 @@ material = SubResource("StandardMaterial3D_3ph1d")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6342747, 1.7764746)
 navigation_mesh = SubResource("NavigationMesh_q4spr")
 
+[node name="stairs" type="MeshInstance3D" parent="building/CSGCombiner3D/NavigationRegion3D" unique_id=1994568530]
+transform = Transform3D(3.600337, 0, 0, 0, 1.4064167, -1.3688177, 0, 0.90539896, 2.1262765, -7.2251906, -0.4829446, -15.710627)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_ot17w")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="building/CSGCombiner3D/NavigationRegion3D/stairs" unique_id=2116078711]
+disable_mode = 2
+collision_layer = 256
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="building/CSGCombiner3D/NavigationRegion3D/stairs/StaticBody3D" unique_id=1131240357]
+transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 8.940697e-08, 0.9999999, -0.046936274, -0.24810934, -0.05306816)
+shape = SubResource("BoxShape3D_sye2k")
+
+[node name="stairs2" type="MeshInstance3D" parent="building/CSGCombiner3D/NavigationRegion3D" unique_id=532643133]
+transform = Transform3D(3.600337, 0, 0, 0, 1.4064167, -1.3688177, 0, 0.90539896, 2.1262765, 6.944699, -0.4442221, -15.6856985)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_ot17w")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="building/CSGCombiner3D/NavigationRegion3D/stairs2" unique_id=1188424733]
+disable_mode = 2
+collision_layer = 256
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="building/CSGCombiner3D/NavigationRegion3D/stairs2/StaticBody3D" unique_id=809540102]
+transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 8.940697e-08, 0.9999999, -0.046936274, -0.24810934, -0.05306816)
+shape = SubResource("BoxShape3D_sye2k")
+
 [node name="CSGBox3D2" type="CSGBox3D" parent="building/CSGCombiner3D/NavigationRegion3D" unique_id=303881428]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.118989944, -0.36933517, -23.454666)
 size = Vector3(20.784668, 2.5288086, 11.241333)
@@ -301,46 +330,18 @@ transform = Transform3D(-0.012414181, 0, -0.99992293, 0, 1, 0, 0.99992293, 0, -0
 polygon = PackedVector2Array(-0.7222414, -0.07792163, -0.69379807, 2.5251434, 3.4049416, -0.06652802)
 depth = 0.22
 
-[node name="misc" type="MeshInstance3D" parent="building" unique_id=73818844]
+[node name="misc" type="MeshInstance3D" parent="building/CSGCombiner3D" unique_id=73818844]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0976181, 1.1178236, -13.05487)
 mesh = SubResource("BoxMesh_sye2k")
 surface_material_override/0 = SubResource("StandardMaterial3D_f288s")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="building/misc" unique_id=1460615684]
+[node name="StaticBody3D" type="StaticBody3D" parent="building/CSGCombiner3D/misc" unique_id=1460615684]
 collision_layer = 256
 collision_mask = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/misc/StaticBody3D" unique_id=1179763073]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="building/CSGCombiner3D/misc/StaticBody3D" unique_id=1179763073]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.050476074, 0.22238159, 0.07884979)
 shape = SubResource("BoxShape3D_5il72")
-
-[node name="stairs" type="MeshInstance3D" parent="building" unique_id=1994568530]
-transform = Transform3D(3.600337, 0, 0, 0, 1.4064167, -1.3688177, 0, 0.90539896, 2.1262765, -7.2251906, 1.1513301, -13.934152)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_ot17w")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="building/stairs" unique_id=2116078711]
-disable_mode = 2
-collision_layer = 256
-collision_mask = 3
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/stairs/StaticBody3D" unique_id=1131240357]
-transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 8.940697e-08, 0.9999999, -0.046936274, -0.24810934, -0.05306816)
-shape = SubResource("BoxShape3D_sye2k")
-
-[node name="stairs2" type="MeshInstance3D" parent="building" unique_id=532643133]
-transform = Transform3D(3.600337, 0, 0, 0, 1.4064167, -1.3688177, 0, 0.90539896, 2.1262765, 6.944699, 1.1900526, -13.909224)
-cast_shadow = 0
-mesh = SubResource("PlaneMesh_ot17w")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="building/stairs2" unique_id=1188424733]
-disable_mode = 2
-collision_layer = 256
-collision_mask = 3
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="building/stairs2/StaticBody3D" unique_id=809540102]
-transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 8.940697e-08, 0.9999999, -0.046936274, -0.24810934, -0.05306816)
-shape = SubResource("BoxShape3D_sye2k")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1133595573]
 transform = Transform3D(1, 0, 0, 0, -0.5967077, 0.8024587, 0, -0.8024587, -0.5967077, 0, 8.431325, 0)
