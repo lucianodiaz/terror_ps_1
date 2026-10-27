@@ -8,6 +8,12 @@ extends Node
 
 @export var velocity_threshold: float = 0.1
 
+@export_group("Gravity")
+@export var use_gravity: bool = false
+@export var gravity_multiplier: float = 1.0
+@export var max_fall_speed: float = 30.0
+
+var vertical_velocity: float = 0.0
 
 var velocity:Vector3
 var velocity_override:Vector3
@@ -55,6 +61,14 @@ func move(character_body:CharacterBody3D, delta:float = -1.0, apply_movement:boo
         delta = get_physics_process_delta_time()
     
     var movement : Vector3 = velocity if apply_movement else Vector3.ZERO
+
+    if use_gravity:
+        if character_body.is_on_floor():
+            vertical_velocity = 0.0
+        else:
+            var gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
+            vertical_velocity = maxf(vertical_velocity - gravity * gravity_multiplier * delta, -max_fall_speed)
+        movement.y = vertical_velocity
 
     character_body.velocity = movement
     character_body.move_and_slide()
