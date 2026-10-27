@@ -6,6 +6,8 @@ extends Node
 
 signal flag_changed(scope: FlagRef.Scope, room_id: String, flag_name: String, value: Variant)
 
+const DEAD_SPAWN_PREFIX: String = "dead:"
+
 var global_flags: Dictionary[String, Variant] = {}
 var room_flags: Dictionary[String, Dictionary] = {}
 
@@ -55,8 +57,23 @@ func initialize_room_flags(room_id: String, initial_flags: Dictionary) -> void:
 	room_flags[room_id] = initial_flags.duplicate(true)
 
 
+## Dead enemies are stored as local room flags, so they are saved and reset with the rest of the state
+func mark_spawn_dead(room_id: String, spawn_id: String) -> void:
+	set_room_flag(room_id, DEAD_SPAWN_PREFIX + spawn_id, true)
+
+
+func is_spawn_dead(room_id: String, spawn_id: String) -> bool:
+	return get_room_flag(room_id, DEAD_SPAWN_PREFIX + spawn_id, false) == true
+
+
 func get_room_state() -> RoomState:
 	return SceneManager.current_room.room_state
+
+
+## Clears every runtime flag, for a new game or a retry after game over
+func reset() -> void:
+	global_flags.clear()
+	room_flags.clear()
 
 
 func export_state() -> Dictionary:
