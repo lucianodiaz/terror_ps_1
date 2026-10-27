@@ -39,7 +39,7 @@ const CONDITIONS: Array[Dictionary] = [
 	{ "min": 0.66, "text": "Bien", "color": Color(0.25, 1.0, 0.35), "bpm": 60.0 },
 	{ "min": 0.33, "text": "Cuidado", "color": Color(1.0, 0.85, 0.2), "bpm": 85.0 },
 	{ "min": 0.15, "text": "Cuidado", "color": Color(1.0, 0.5, 0.1), "bpm": 105.0 },
-	{ "min": 0.0, "text": "Peligro", "color": Color(1.0, 0.2, 0.2), "bpm": 135.0 },
+	{ "min": 0.1, "text": "Peligro", "color": Color(1.0, 0.2, 0.2), "bpm": 135.0 },
 ]
 
 @onready var _grid: GridContainer = %Grid
@@ -599,7 +599,7 @@ func _get_health_ratio() -> float:
 	var health: HealthComponent = player.health_component if player else null
 	if health == null or health.max_health <= 0.0:
 		return 1.0
-	return clampf(health.current_health / health.max_health, 0.0, 1.0)
+	return health.get_health_ratio()
 
 
 func _get_player() -> Player:

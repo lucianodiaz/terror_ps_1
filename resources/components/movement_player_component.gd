@@ -29,42 +29,57 @@ extends Node
 
 var current_speed:float = 0.0
 var is_aiming:bool = false
+## Picks the damaged_* speed set instead of the normal one
+var is_injured:bool = false:
+    set(value):
+        if is_injured == value:
+            return
+        is_injured = value
+        _apply_speed()
+
+var _running:bool = false
+var _backward:bool = false
 
 var _reference_basis:Basis = Basis.IDENTITY
 var _reference_locked:bool = false
 
 func _ready() -> void:
-    current_speed = walk_speed
+    _apply_speed()
 
 func set_run_speed() -> void:
-    current_speed = run_speed
+    _set_gait(true, false)
 
 func set_walk_speed() -> void:
-    current_speed = walk_speed
+    _set_gait(false, false)
 
 func set_backward_speed() -> void:
-    current_speed = backward_speed
+    _set_gait(false, true)
 
 func set_run_backward_speed() -> void:
-    current_speed = run_backward_speed
-
-func set_damaged_backward_speed() -> void:
-    current_speed = damaged_backward_speed
-
-func set_damaged_run_backward_speed() -> void:
-    current_speed = damaged_run_backward_speed
-
-func set_damaged_run_speed() -> void:
-    current_speed = damaged_run_speed
-
-func set_damaged_walk_speed() -> void:
-    current_speed = damaged_walk_speed
+    _set_gait(true, true)
 
 func reset_speed() -> void:
-    current_speed = walk_speed
+    _set_gait(false, false)
 
 func is_running() -> bool:
-    return current_speed == run_speed or current_speed == damaged_run_speed
+    return _running
+
+func _set_gait(running:bool, backward:bool) -> void:
+    _running = running
+    _backward = backward
+    _apply_speed()
+
+func _apply_speed() -> void:
+    if is_injured:
+        if _backward:
+            current_speed = damaged_run_backward_speed if _running else damaged_backward_speed
+        else:
+            current_speed = damaged_run_speed if _running else damaged_walk_speed
+    else:
+        if _backward:
+            current_speed = run_backward_speed if _running else backward_speed
+        else:
+            current_speed = run_speed if _running else walk_speed
 
 func stop_movement() -> void:
     ## Next time the player moves we want a fresh snapshot, the camera may have

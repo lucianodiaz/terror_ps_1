@@ -162,6 +162,10 @@ offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_ecg")
+beats_per_minute = 65.0
+scroll_speed = 290.0
+line_width = 4.0
+grid_step = 16.0
 
 [node name="EquipPanel" type="Panel" parent="Dim/Frame" unique_id=1387307441]
 layout_mode = 0

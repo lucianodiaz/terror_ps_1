@@ -80,6 +80,8 @@ func initialize_health() -> void:
 func percent_health() -> float:
 	return (current_health * 100) / max_health
 
+func get_health_ratio() -> float:
+	return clampf(current_health / max_health, 0.0, 1.0)
 
 func _on_timer_timeout() -> void:
 	hit_invisibility = false

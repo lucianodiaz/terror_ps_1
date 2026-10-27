@@ -19,6 +19,13 @@ const ATTACK_ACTIVE : StringName = &"parameters/AttackShot/active"
 const AIM_ANIM_NODE : StringName = &"AimAnim"
 const ATTACK_ANIM_NODE : StringName = &"AttackAnim"
 
+## Transition node between then locomotion and Injured locomotion
+## when HP is lower 0.15 ratio
+const HEALTH_STATE_REQUEST : StringName = &"parameters/HealthState/transition_request"
+const HEALTH_STATE_INJURED : StringName = &"injured"
+const HEALTH_STATE_NORMAL : StringName = &"normal"
+
+
 ## Its locomotion StateMachine reads is_moving, is_running and is_moving_backward
 ## through advance expressions, so advance_expression_base_node points at this node
 @export var animation_tree: AnimationTree
@@ -237,6 +244,15 @@ func _update_locomotion_state() -> void:
 
 
 func _on_health_changed(_current_health: float, dmg_received: float) -> void:
+	var health_ratio: float = health_component.get_health_ratio()
+	var injured: bool = health_ratio <= 0.15
+	movement_player_component.is_injured = injured
+	if injured:
+		animation_tree.set(HEALTH_STATE_REQUEST, HEALTH_STATE_INJURED)
+	else:
+		animation_tree.set(HEALTH_STATE_REQUEST, HEALTH_STATE_NORMAL)
+	
+	
 	if animation_tree == null or dmg_received <= 0.0 or health_component.is_died:
 		return
 	animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
@@ -245,6 +261,8 @@ func _on_health_changed(_current_health: float, dmg_received: float) -> void:
 	movement_player_component.is_aiming = false
 	movement_player_component.stop_movement()
 	_cancel_attack()
+
+
 
 
 func _update_aim_state() -> void:
