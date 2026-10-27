@@ -58,9 +58,8 @@ var observable_object: Node3D = null
 ## Covers the frame between the hit request and the OneShot reporting itself active
 var _hit_requested: bool = false
 var is_attacking: bool = false
-var is_hurt: bool:
-	get:
-		return _hit_requested or (animation_tree != null and animation_tree.get(HIT_ACTIVE))
+## Released by the _on_end_hurt key of the hit clip, not by the OneShot ending
+var is_hurt: bool = false
 
 var is_aiming_weapon: bool:
 	get:
@@ -157,6 +156,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if _hit_requested and animation_tree.get(HIT_ACTIVE):
 		_hit_requested = false
+	## The OneShot can end without reaching the key, aborted for example
+	elif is_hurt and not _hit_requested and not animation_tree.get(HIT_ACTIVE):
+		is_hurt = false
 	## Releasing aim while the inventory is open never reaches _input
 	if movement_player_component.is_aiming and not Input.is_action_pressed("aim"):
 		movement_player_component.is_aiming = false
@@ -239,6 +241,7 @@ func _on_health_changed(_current_health: float, dmg_received: float) -> void:
 		return
 	animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	_hit_requested = true
+	is_hurt = true
 	movement_player_component.is_aiming = false
 	movement_player_component.stop_movement()
 	_cancel_attack()
@@ -340,6 +343,7 @@ func _on_entity_died(dead:bool) -> void:
 	print("[Player] - Entity died")
 	is_dead = true
 	_hit_requested = false
+	is_hurt = false
 	is_moving = false
 	is_running = false
 	is_moving_backward = false
@@ -360,4 +364,5 @@ func _on_end_hurt() -> void:
 	print("[Player] - End hurt")
 	_hit_requested = false
 	is_hurt = false
-	
+	if animation_tree:
+		animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FADE_OUT)

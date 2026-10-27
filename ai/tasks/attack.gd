@@ -2,7 +2,7 @@
 extends BTAction
 
 ## The OneShot needs a frame to report itself active
-const START_GRACE_TIME: float = 0.1
+const START_GRACE_TIME: float = 0.2
 
 
 func _generate_name() -> String:
