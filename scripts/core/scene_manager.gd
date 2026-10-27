@@ -4,11 +4,6 @@ var rooms_list: RoomsPackage = preload("res://resources/data/room_list.tres")
 var current_room: Room = null
 var world : World = null
 
-func _save_room_state(room: Room) -> void:
-	print("SceneManager._save_room_state: saving room state for room: ", room.room_state.room_id)
-	pass
-
-
 ## This method is called by the World script to load a new room 
 func load_room(new_room_name: String) -> void:
 	_load_room(new_room_name)
@@ -58,8 +53,6 @@ func _load_room(new_room_name: String, target_door_name: String = "") -> void:
 func _free_current_room() -> void:
 	if current_room == null:
 		return
-	## We need to save state room and then queue free the current room
-	_save_room_state(current_room)
 	for door : Door in current_room.get_tree().get_nodes_in_group("doors"):
 		if door:
 			door.requested_to_change_room.disconnect(_on_door_requested_to_change_room)

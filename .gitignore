@@ -18,7 +18,7 @@ mono_crash.*.json
 
 # Documentation
 doc/
-
+*.dll
 # cursor
 .cursor/
 *.TMP

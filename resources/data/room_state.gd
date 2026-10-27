@@ -2,17 +2,13 @@
 class_name RoomState
 extends Resource
 
+## Design data only. This resource is shared by every instance of the room scene,
+## so never write to it at runtime: game progress lives in GameStateManager.
 
 @export var room_id: String = ""
 
 ## Misc room name use for UI display
 @export var room_name: String = ""
-
-## what instances are already dead for ever
-@export var dead_spawn_ids:Array[String] = [] 
-
-## what items are already picked up for ever
-@export var items_picked_up:Array[String] = []
 
 ## Local flags copied to GameStateManager the first time the room is visited
 @export var initial_flags: Dictionary[String, Variant] = {}
