@@ -216,6 +216,9 @@ func has_item(item_id: String, amount: int = 1) -> bool:
 
 
 func get_amount(item_id: String) -> int:
+	## Empty slots are {}, so an empty id would match them
+	if item_id == "":
+		return 0
 	var total: int = 0
 	for slot in slots:
 		if slot.get("id", "") == item_id:
@@ -289,6 +292,11 @@ func _place(data: ItemData, amount: int) -> void:
 		leftover -= add
 		if leftover <= 0:
 			return
+
+
+## Empty slots, no files and nothing equipped, for a new game
+func reset() -> void:
+	import_state({})
 
 
 func export_state() -> Dictionary:

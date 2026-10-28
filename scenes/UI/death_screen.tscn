@@ -1,0 +1,159 @@
+[gd_scene format=3 uid="uid://crxo4hm5ovys5"]
+
+[ext_resource type="StyleBox" uid="uid://38udan2b3mh2" path="res://assets/theme/LabelButton.tres" id="1_2n4oe"]
+[ext_resource type="Script" uid="uid://bw7yl52kgt7uy" path="res://scripts/ui/death_screen.gd" id="1_g4w52"]
+[ext_resource type="LabelSettings" uid="uid://qhyd6x3n3wus" path="res://assets/theme/label_settings.tres" id="1_jcrgr"]
+[ext_resource type="Shader" uid="uid://c48gcdbqmm828" path="res://scenes/UI/death_screen.gdshader" id="2_qrt7s"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lw84q"]
+shader = ExtResource("2_qrt7s")
+shader_parameter/progress = 0.0
+shader_parameter/cover_color = Color(0, 0, 0, 1)
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/softness = 0.03
+shader_parameter/aspect = 0.0
+
+[sub_resource type="Animation" id="Animation_g4w52"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material:shader_parameter/progress")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_qrt7s"]
+resource_name = "open"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material:shader_parameter/progress")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h0yij"]
+_data = {
+&"RESET": SubResource("Animation_g4w52"),
+&"open": SubResource("Animation_qrt7s")
+}
+
+[node name="DeathScreen" type="CanvasLayer" unique_id=980799414]
+process_mode = 3
+layer = 21
+script = ExtResource("1_g4w52")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=395191167]
+modulate = Color(1, 1, 1, 0)
+material = SubResource("ShaderMaterial_lw84q")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Frame" type="Control" parent="Dim" unique_id=514834749]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Dim/Frame" unique_id=1255884722]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 182.735
+offset_bottom = 303.73523
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 120
+text = "ESTAS MUERTO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="Dim/Frame" unique_id=842558740]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -414.5
+offset_top = -386.0
+offset_right = 414.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ContinueLabel" type="Label" parent="Dim/Frame/Buttons" unique_id=188147419]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("1_2n4oe")
+text = "Continue"
+label_settings = ExtResource("1_jcrgr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LoadLabel" type="Label" parent="Dim/Frame/Buttons" unique_id=1501372986]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("1_2n4oe")
+text = "Load"
+label_settings = ExtResource("1_jcrgr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="QuitLabel" type="Label" parent="Dim/Frame/Buttons" unique_id=1923243748]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("1_2n4oe")
+text = "Quit"
+label_settings = ExtResource("1_jcrgr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Dim" unique_id=1011525626]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_h0yij")

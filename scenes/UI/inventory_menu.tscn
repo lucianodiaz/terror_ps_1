@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cn5t4yhoklrjy" path="res://scripts/ui/inventory_menu.gd" id="1_menu"]
 [ext_resource type="Script" uid="uid://b13du0jf3402a" path="res://scripts/ui/ecg_monitor.gd" id="2_ecg"]
+[ext_resource type="StyleBox" uid="uid://38udan2b3mh2" path="res://assets/theme/LabelButton.tres" id="3_5bih5"]
+[ext_resource type="LabelSettings" uid="uid://qhyd6x3n3wus" path="res://assets/theme/label_settings.tres" id="4_ivdwf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_frame"]
 bg_color = Color(0.19607843, 0.19607843, 0.21568628, 1)
@@ -50,23 +52,6 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.12, 0.12, 0.15, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_button"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.6416089, 0.6569148, 0.6951795, 1)
-
-[sub_resource type="LabelSettings" id="Label_button"]
-font_size = 40
-font_color = Color(0.92, 0.94, 1, 1)
-outline_size = 6
-outline_color = Color(0, 0, 0, 1)
-shadow_size = 2
-shadow_color = Color(0, 0, 0, 0.8)
-shadow_offset = Vector2(2, 2)
 
 [sub_resource type="LabelSettings" id="Label_text"]
 font_size = 36
@@ -232,9 +217,9 @@ layout_mode = 0
 offset_left = 1030.0
 offset_right = 1600.0
 offset_bottom = 80.0
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "SALIDA"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -245,9 +230,9 @@ offset_left = 1030.0
 offset_top = 92.0
 offset_right = 1309.0
 offset_bottom = 168.0
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "ARCHIVO"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -258,9 +243,9 @@ offset_left = 1321.0
 offset_top = 92.0
 offset_right = 1600.0
 offset_bottom = 168.0
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "MAPA"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -469,9 +454,9 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "USAR"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -479,9 +464,9 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "COMBINAR"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -489,9 +474,9 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/normal = ExtResource("3_5bih5")
 text = "COMPROBAR"
-label_settings = SubResource("Label_button")
+label_settings = ExtResource("4_ivdwf")
 horizontal_alignment = 1
 vertical_alignment = 1
 

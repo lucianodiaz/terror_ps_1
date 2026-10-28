@@ -2,11 +2,20 @@ extends Node
 
 var rooms_list: RoomsPackage = preload("res://resources/data/room_list.tres")
 var current_room: Room = null
+## Key of current_room in rooms_list, what load_room() expects
+var current_room_name: String = ""
 var world : World = null
 
 ## This method is called by the World script to load a new room 
-func load_room(new_room_name: String) -> void:
-	_load_room(new_room_name)
+func load_room(new_room_name: String, target_door_name: String = "") -> void:
+	_load_room(new_room_name, target_door_name)
+
+
+## Forgets the room and world before the world scene is reloaded, they are freed with it
+func reset() -> void:
+	current_room = null
+	current_room_name = ""
+	world = null
 
 
 func _on_door_requested_to_change_room(_door_name: String, new_room_name: String, target_door_name: String = "", transition_type: String = "") -> void:
@@ -82,6 +91,7 @@ func _spawn_room(new_room_name: String, target_door_name: String = "") -> bool:
 
 	var new_room: Room = instance
 	current_room = new_room
+	current_room_name = new_room_name
 	var father = get_tree().current_scene
 	father.add_child(new_room)
 

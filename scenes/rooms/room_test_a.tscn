@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="4_ocvd4"]
 [ext_resource type="Material" uid="uid://rgf8k618it6y" path="res://assets/materials/test_blue_material.tres" id="4_rn3xe"]
 [ext_resource type="Script" uid="uid://u3u24vtqmxqn" path="res://scripts/system/camera/fixed_follow_camera.gd" id="4_ssl2r"]
+[ext_resource type="PackedScene" path="res://scenes/items/typewriter.tscn" id="5_kvo5o"]
 [ext_resource type="PackedScene" uid="uid://dnpgw6prxkvpr" path="res://scenes/rooms/door.tscn" id="7_cow0f"]
 [ext_resource type="Script" uid="uid://dvnjgm08m7rhc" path="res://scripts/system/camera/camera_trigger_zone.gd" id="8_ocvd4"]
 [ext_resource type="Resource" uid="uid://ows2xhuupm2i" path="res://resources/data/flags/hall_east_door.tres" id="8_ssl2r"]
@@ -77,8 +78,8 @@ size = Vector3(10.391693, 10.103516, 1)
 material = SubResource("StandardMaterial3D_ocvd4")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=743053192]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3655431, 5.040036, -0.4389038)
-size = Vector3(0.6945801, 10.015198, 11.165894)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3655431, 5.040036, -2.8843842)
+size = Vector3(0.6945801, 10.015198, 16.056854)
 material = SubResource("StandardMaterial3D_ocvd4")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=657526187]
@@ -101,6 +102,9 @@ material = SubResource("StandardMaterial3D_ocvd4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4646316, 0.65959024, 3.6214476)
 size = Vector3(4.7973633, 1, 1)
 material = ExtResource("4_rn3xe")
+
+[node name="Typewriter" parent="room/CSGCombiner3D" unique_id=1748392011 instance=ExtResource("5_kvo5o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2810805, 1.2933446, 3.4919963)
 
 [node name="zoneA" type="Node3D" parent="." unique_id=1191941281]
 

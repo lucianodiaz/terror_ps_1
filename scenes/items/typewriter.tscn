@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://1bpq62lag4bk"]
+
+[ext_resource type="Script" uid="uid://bkprratdq3qcn" path="res://scripts/system/save/save_point.gd" id="1_svpnt"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_trig"]
+radius = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_type"]
+size = Vector3(0.5, 0.25, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_obs"]
+size = Vector3(0.6, 0.4, 0.5)
+
+[node name="Typewriter" type="Area3D" unique_id=1748392011]
+collision_layer = 64
+script = ExtResource("1_svpnt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=520391847]
+shape = SubResource("SphereShape3D_trig")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1093847261]
+mesh = SubResource("BoxMesh_type")
+
+[node name="TypewriterObservable" type="StaticBody3D" parent="." unique_id=884520193]
+collision_layer = 1024
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TypewriterObservable" unique_id=376150284]
+shape = SubResource("BoxShape3D_obs")
+debug_color = Color(0.98039216, 0, 0.3764706, 1)

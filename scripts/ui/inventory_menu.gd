@@ -370,13 +370,13 @@ func _move_focus(event: InputEvent) -> bool:
 func _move_grid(event: InputEvent, wrap_rows: bool = true) -> bool:
 	var dx: int = 0
 	var dy: int = 0
-	if event.is_action_pressed("left"):
+	if event.is_action_pressed("ui_left"):
 		dx = -1
-	elif event.is_action_pressed("right"):
+	elif event.is_action_pressed("ui_right"):
 		dx = 1
-	elif event.is_action_pressed("forward"):
+	elif event.is_action_pressed("ui_up"):
 		dy = -1
-	elif event.is_action_pressed("backward"):
+	elif event.is_action_pressed("ui_down"):
 		dy = 1
 	else:
 		return false

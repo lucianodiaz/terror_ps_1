@@ -76,6 +76,9 @@ var is_aiming_weapon: bool:
 var _aim_state: StringName = AIM_STATE_NORMAL
 var _head_look: LookAtModifier3D = null
 
+
+signal on_player_died
+
 func _ready() -> void:
 	if animation_tree:
 		animation_tree.active = true
@@ -373,6 +376,9 @@ func _on_entity_died(dead:bool) -> void:
 	if animation_tree:
 		animation_tree.set(HIT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 		animation_tree.set(LIFE_STATE_REQUEST, LIFE_STATE_DEAD)
+
+func _on_end_die_animation() -> void:
+	on_player_died.emit()
 
 func _on_end_attack() -> void:
 	print("[Player] - End attack")

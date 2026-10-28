@@ -36,6 +36,7 @@ script = ExtResource("3_12e5v")
 spawn_id = "hall_entity_1"
 enemy_scene = ExtResource("20_i34dg")
 spawn_position = Vector3(8.059, 3.59, -18.7)
+required_flag = "lever_puzzle"
 metadata/_custom_type_script = "uid://bc0m7xolu53ca"
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_q4spr"]
@@ -598,7 +599,7 @@ metadata/_custom_type_script = "uid://33tffxfs48to"
 collision_layer = 16
 collision_mask = 32
 script = ExtResource("18_f288s")
-damage_amount = 50.0
+damage_amount = 100.0
 metadata/_custom_type_script = "uid://ixxw4jkukhy7"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitComponent" unique_id=236045596]

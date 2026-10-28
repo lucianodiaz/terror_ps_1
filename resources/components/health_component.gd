@@ -77,6 +77,12 @@ func is_full() -> bool:
 func initialize_health() -> void:
 	current_health = max_health
 
+## Sets the health without counting it as damage or heal, e.g. when loading a checkpoint
+func restore_health(health: float) -> void:
+	current_health = clampf(health, 0.0, max_health)
+	is_died = current_health <= 0.0
+	on_health_changed.emit(current_health, 0.0)
+
 func percent_health() -> float:
 	return (current_health * 100) / max_health
 

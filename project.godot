@@ -26,11 +26,14 @@ buses/default_bus_layout="uid://ccy6lbk3fdxvm"
 CameraManager="*uid://bh7f2ki2oreng"
 SceneManager="*uid://dveby4smk5rl0"
 GameStateManager="*uid://beissagoyod8h"
+SaveManager="*res://scripts/core/save_manager.gd"
 Inventory="*res://scripts/core/inventory.gd"
 AudioManager="*uid://cekxqawm1v8mv"
 SettingsManager="*res://scripts/core/settings_manager.gd"
 MessageManager="*res://scripts/core/message_manager.gd"
 InventoryMenu="*res://scenes/UI/inventory_menu.tscn"
+DeathScreen="*uid://crxo4hm5ovys5"
+LoadScreen="*uid://cedwkknpe14sv"
 
 [display]
 
