@@ -134,7 +134,6 @@ func _input(event: InputEvent) -> void:
 		elif event.is_action_pressed("run"):
 			MessageManager.clear()
 		return
-
 	if event.is_action("aim"):
 		movement_player_component.is_aiming = event.is_pressed()
 	if event.is_action_pressed("action"):

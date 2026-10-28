@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dssbj0lji7mm3" path="res://assets/misc/texture_08.png" id="4_ocvd4"]
 [ext_resource type="Material" uid="uid://rgf8k618it6y" path="res://assets/materials/test_blue_material.tres" id="4_rn3xe"]
 [ext_resource type="Script" uid="uid://u3u24vtqmxqn" path="res://scripts/system/camera/fixed_follow_camera.gd" id="4_ssl2r"]
-[ext_resource type="PackedScene" path="res://scenes/items/typewriter.tscn" id="5_kvo5o"]
+[ext_resource type="PackedScene" uid="uid://1bpq62lag4bk" path="res://scenes/items/typewriter.tscn" id="5_kvo5o"]
 [ext_resource type="PackedScene" uid="uid://dnpgw6prxkvpr" path="res://scenes/rooms/door.tscn" id="7_cow0f"]
 [ext_resource type="Script" uid="uid://dvnjgm08m7rhc" path="res://scripts/system/camera/camera_trigger_zone.gd" id="8_ocvd4"]
 [ext_resource type="Resource" uid="uid://ows2xhuupm2i" path="res://resources/data/flags/hall_east_door.tres" id="8_ssl2r"]
@@ -109,7 +109,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2810805, 1.2933446, 3.49199
 [node name="zoneA" type="Node3D" parent="." unique_id=1191941281]
 
 [node name="FixedCamera" parent="zoneA" unique_id=2088113209 instance=ExtResource("2_8mjfh")]
-transform = Transform3D(0.87035537, -0.24621207, 0.4264518, 0, 0.8660254, 0.5, -0.49242413, -0.43517768, 0.75374985, 6.0922585, 6.8290415, 4.2673473)
+transform = Transform3D(0.7604056, -0.1866734, 0.6220421, 0, 0.9578005, 0.2874337, -0.6494485, -0.21856621, 0.72831684, 7.016184, 4.318873, 4.4998527)
 is_active = true
 
 [node name="CameraTriggerZone" parent="zoneA" unique_id=8547621 node_paths=PackedStringArray("target_camera") instance=ExtResource("3_cow0f")]
@@ -217,7 +217,7 @@ unlock_flag = ExtResource("8_ssl2r")
 unlockable_from_this_side = true
 
 [node name="door3" parent="." unique_id=297023761 instance=ExtResource("7_cow0f")]
-transform = Transform3D(-0.9999674, 0, 0.008078754, 0, 1, 0, -0.008078754, 0, -0.9999674, 0.8602464, 0, -11.127099)
+transform = Transform3D(-0.9999674, 0, 0.008078754, 0, 1, 0, -0.008078754, 0, -0.9999674, 3.1214592, 0, -11.10883)
 door_name = "third_door"
 connected_room_name = "room_hall"
 target_door_name = "north_door"
