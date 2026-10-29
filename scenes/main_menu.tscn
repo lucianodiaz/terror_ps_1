@@ -1,0 +1,290 @@
+[gd_scene format=3 uid="uid://b5esgbnfgfjqy"]
+
+[ext_resource type="Script" uid="uid://xg64r51t2et1" path="res://scripts/ui/main_menu.gd" id="1_mmenu"]
+[ext_resource type="PackedScene" uid="uid://cp1tk443p50qx" path="res://scenes/UI/main_menu_screen.tscn" id="2_mmscr"]
+[ext_resource type="Shader" uid="uid://n6p3yggte6ke" path="res://assets/shaders/crt_screen.gdshader" id="3_crtsh"]
+
+[sub_resource type="Environment" id="Environment_menu"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(0.12, 0.13, 0.15, 1)
+ambient_light_energy = 0.9
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.1
+fog_enabled = true
+fog_light_color = Color(0.04, 0.05, 0.06, 1)
+fog_density = 0.035
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_grime"]
+frequency = 0.04
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_grime"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_grime")
+seamless = true
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.36, 0.34, 0.31, 1)
+albedo_texture = SubResource("NoiseTexture2D_grime")
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="Mesh_floor"]
+material = SubResource("Material_floor")
+size = Vector2(12, 12)
+
+[sub_resource type="StandardMaterial3D" id="Material_wall"]
+albedo_color = Color(0.5, 0.52, 0.5, 1)
+albedo_texture = SubResource("NoiseTexture2D_grime")
+uv1_scale = Vector3(0.4, 0.4, 0.4)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_ceiling"]
+material = SubResource("Material_wall")
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="Mesh_side_wall"]
+material = SubResource("Material_wall")
+size = Vector3(0.2, 4, 12)
+
+[sub_resource type="BoxMesh" id="Mesh_back_left"]
+material = SubResource("Material_wall")
+size = Vector3(7.6, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_back_right"]
+material = SubResource("Material_wall")
+size = Vector3(3.2, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_back_bottom"]
+material = SubResource("Material_wall")
+size = Vector3(1.2, 1.6, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_back_top"]
+material = SubResource("Material_wall")
+size = Vector3(1.2, 0.8, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_pillar"]
+material = SubResource("Material_wall")
+size = Vector3(0.7, 4, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="Material_window"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0.07846465, 1)
+
+[sub_resource type="QuadMesh" id="Mesh_window_glow"]
+material = SubResource("Material_window")
+size = Vector2(1.6, 2)
+
+[sub_resource type="StandardMaterial3D" id="Material_frame"]
+albedo_color = Color(0.75, 0.75, 0.72, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh_frame_vertical"]
+material = SubResource("Material_frame")
+size = Vector3(0.06, 1.6, 0.08)
+
+[sub_resource type="BoxMesh" id="Mesh_frame_horizontal"]
+material = SubResource("Material_frame")
+size = Vector3(1.2, 0.06, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="Material_wood"]
+albedo_color = Color(0.3, 0.19, 0.1, 1)
+roughness = 0.9
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_table_top"]
+material = SubResource("Material_wood")
+size = Vector3(0.9, 0.05, 0.6)
+
+[sub_resource type="BoxMesh" id="Mesh_table_leg"]
+material = SubResource("Material_wood")
+size = Vector3(0.05, 0.55, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Material_tv_body"]
+albedo_color = Color(0.4, 0.25, 0.13, 1)
+roughness = 0.6
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_tv_body"]
+material = SubResource("Material_tv_body")
+size = Vector3(0.75, 0.55, 0.55)
+
+[sub_resource type="ShaderMaterial" id="Material_screen"]
+render_priority = 0
+shader = ExtResource("3_crtsh")
+shader_parameter/screen_color = Color(0.5699731, 0.71032244, 1, 1)
+shader_parameter/brightness = 1.3
+shader_parameter/static_amount = 0.25
+shader_parameter/static_resolution = Vector2(160, 120)
+shader_parameter/static_fps = 24.0
+shader_parameter/scanline_count = 90.0
+shader_parameter/roll_speed = 0.12
+
+[sub_resource type="QuadMesh" id="Mesh_tv_screen"]
+material = SubResource("Material_screen")
+size = Vector2(0.5, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="Material_knob"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="Mesh_knob"]
+material = SubResource("Material_knob")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.03
+
+[sub_resource type="BoxMesh" id="Mesh_plank"]
+material = SubResource("Material_wood")
+size = Vector3(0.08, 1.2, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="Material_cardboard"]
+albedo_color = Color(0.55, 0.5, 0.4, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_cardboard"]
+material = SubResource("Material_cardboard")
+size = Vector3(0.6, 0.02, 0.5)
+
+[node name="MainMenu" type="Node3D" unique_id=811249561 node_paths=PackedStringArray("camera", "tv_light")]
+script = ExtResource("1_mmenu")
+camera = NodePath("Camera3D")
+tv_light = NodePath("TV/ScreenLight")
+sway_speed = 0.05
+flicker_strength = 0.8
+flicker_smoothing = 34.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=851251973]
+environment = SubResource("Environment_menu")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2049373602]
+transform = Transform3D(0.82412446, 0.03703246, 0.5651969, 0, 0.9978604, -0.065381154, -0.56640875, 0.053882208, 0.8223611, 2.5732176, 0.6842805, 3.0090475)
+current = true
+fov = 60.0
+
+[node name="Room" type="Node3D" parent="." unique_id=205318765]
+
+[node name="Floor" type="MeshInstance3D" parent="Room" unique_id=1358539064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = SubResource("Mesh_floor")
+
+[node name="Ceiling" type="MeshInstance3D" parent="Room" unique_id=1733411131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, -1)
+mesh = SubResource("Mesh_ceiling")
+
+[node name="LeftWall" type="MeshInstance3D" parent="Room" unique_id=1044713831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, -1)
+mesh = SubResource("Mesh_side_wall")
+
+[node name="RightWall" type="MeshInstance3D" parent="Room" unique_id=248838312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, -1)
+mesh = SubResource("Mesh_side_wall")
+
+[node name="BackWallLeft" type="MeshInstance3D" parent="Room" unique_id=1919485935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 2, -5)
+mesh = SubResource("Mesh_back_left")
+
+[node name="BackWallRight" type="MeshInstance3D" parent="Room" unique_id=832926084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 2, -5)
+mesh = SubResource("Mesh_back_right")
+
+[node name="BackWallBelowWindow" type="MeshInstance3D" parent="Room" unique_id=68364039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.8, -5)
+mesh = SubResource("Mesh_back_bottom")
+
+[node name="BackWallAboveWindow" type="MeshInstance3D" parent="Room" unique_id=522097841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 3.6, -5)
+mesh = SubResource("Mesh_back_top")
+
+[node name="Pillar" type="MeshInstance3D" parent="Room" unique_id=721691458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 2, -3.2)
+mesh = SubResource("Mesh_pillar")
+
+[node name="Window" type="Node3D" parent="Room" unique_id=191020020]
+
+[node name="Outside" type="MeshInstance3D" parent="Room/Window" unique_id=442039664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.4, -5.6)
+cast_shadow = 0
+mesh = SubResource("Mesh_window_glow")
+
+[node name="FrameVertical" type="MeshInstance3D" parent="Room/Window" unique_id=1673874692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.4, -5)
+mesh = SubResource("Mesh_frame_vertical")
+
+[node name="FrameHorizontal" type="MeshInstance3D" parent="Room/Window" unique_id=1915557422]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.4, -5)
+mesh = SubResource("Mesh_frame_horizontal")
+
+[node name="WindowLight" type="SpotLight3D" parent="Room/Window" unique_id=33580075]
+transform = Transform3D(-0.9398, -0.1791, 0.2911, 0, 0.8518, 0.5239, -0.3418, 0.4924, -0.8005, 3, 3.6, -7)
+light_color = Color(0, 0.59792817, 0.9004242, 1)
+light_energy = 4.0
+light_bake_mode = 1
+shadow_enabled = true
+spot_range = 11.802
+spot_attenuation = 0.9
+spot_angle = 25.29
+spot_angle_attenuation = 0.68302214
+
+[node name="TV" type="Node3D" parent="." unique_id=2089070023]
+transform = Transform3D(0.9613, 0, -0.2756, 0, 1, 0, 0.2756, 0, 0.9613, 1.1, 0, -1.6)
+
+[node name="TableTop" type="MeshInstance3D" parent="TV" unique_id=1768598813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("Mesh_table_top")
+
+[node name="LegFrontLeft" type="MeshInstance3D" parent="TV" unique_id=492186323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.275, 0.25)
+mesh = SubResource("Mesh_table_leg")
+
+[node name="LegFrontRight" type="MeshInstance3D" parent="TV" unique_id=1812821259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.275, 0.25)
+mesh = SubResource("Mesh_table_leg")
+
+[node name="LegBackLeft" type="MeshInstance3D" parent="TV" unique_id=734495899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.275, -0.25)
+mesh = SubResource("Mesh_table_leg")
+
+[node name="LegBackRight" type="MeshInstance3D" parent="TV" unique_id=2067653230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.275, -0.25)
+mesh = SubResource("Mesh_table_leg")
+
+[node name="Body" type="MeshInstance3D" parent="TV" unique_id=1396505667]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("Mesh_tv_body")
+
+[node name="Screen" type="MeshInstance3D" parent="TV" unique_id=1049902699]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.87, 0.277)
+cast_shadow = 0
+mesh = SubResource("Mesh_tv_screen")
+
+[node name="KnobTop" type="MeshInstance3D" parent="TV" unique_id=1753055877]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.27, 0.95, 0.29)
+mesh = SubResource("Mesh_knob")
+
+[node name="KnobBottom" type="MeshInstance3D" parent="TV" unique_id=998455332]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.27, 0.82, 0.29)
+mesh = SubResource("Mesh_knob")
+
+[node name="ScreenLight" type="OmniLight3D" parent="TV" unique_id=187264916]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.87, 0.7)
+light_color = Color(0.6669853, 0.8788387, 1, 1)
+light_energy = 0.45
+omni_range = 2.2
+
+[node name="Debris" type="Node3D" parent="." unique_id=743723332]
+
+[node name="Plank" type="MeshInstance3D" parent="Debris" unique_id=1706194349]
+transform = Transform3D(0.67682254, -0.7092852, -0.19697092, 0.67994523, 0.70489556, -0.20191205, 0.28205714, 0.0027291784, 0.9593924, 1.8470395, 0.48600164, -1.2826111)
+mesh = SubResource("Mesh_plank")
+
+[node name="Cardboard" type="MeshInstance3D" parent="Debris" unique_id=2098605972]
+transform = Transform3D(0.9659, 0, 0.2588, 0, 1, 0, -0.2588, 0, 0.9659, 0.2736808, 0.01, -1.2197418)
+mesh = SubResource("Mesh_cardboard")
+
+[node name="MainMenuScreen" parent="." unique_id=359840010 instance=ExtResource("2_mmscr")]

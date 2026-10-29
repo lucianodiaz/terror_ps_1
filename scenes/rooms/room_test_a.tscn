@@ -99,12 +99,12 @@ size = Vector3(1, 3.6421509, 7.622986)
 material = SubResource("StandardMaterial3D_ocvd4")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="room/CSGCombiner3D" unique_id=1687923550]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4646316, 0.65959024, 3.6214476)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4646316, 0.65959024, 4.1702414)
 size = Vector3(4.7973633, 1, 1)
 material = ExtResource("4_rn3xe")
 
 [node name="Typewriter" parent="room/CSGCombiner3D" unique_id=1748392011 instance=ExtResource("5_kvo5o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2810805, 1.2933446, 3.4919963)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2810805, 1.2933446, 4.04079)
 
 [node name="zoneA" type="Node3D" parent="." unique_id=1191941281]
 
@@ -234,5 +234,5 @@ target_door_name = "west_door"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.883, 1.409, 8.534)
 
 [node name="ClockTowerMemo" parent="." unique_id=1933074538 instance=ExtResource("14_rn3xe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1104114, 1.1595881, 3.5452762)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1104114, 1.1595881, 4.09407)
 item_id = "marvin_report"

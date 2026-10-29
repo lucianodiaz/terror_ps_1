@@ -1,5 +1,5 @@
 ## Save slots list, opened in SAVE mode from a SavePoint and in LOAD mode
-## from the death screen. The scene is the autoload.
+## from the main menu and the death screen. The scene is the autoload.
 extends CanvasLayer
 
 enum Mode { SAVE, LOAD }

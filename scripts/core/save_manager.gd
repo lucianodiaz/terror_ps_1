@@ -10,6 +10,7 @@ const SLOT_COUNT: int = 10
 const SAVE_DIR: String = "user://saves/"
 const SAVE_FILE: String = "slot_%d.save"
 const SAVE_VERSION: int = 1
+const WORLD_SCENE: String = "res://scenes/world.tscn"
 
 ## Slot data waiting for the World to be reloaded, empty on a new game
 var _pending: Dictionary = {}
@@ -102,14 +103,14 @@ func resume_world() -> void:
 		player.health_component.restore_health(health)
 
 
-## Frees the room and world references and reloads the world scene, so the
-## player, enemies and cameras start clean
+## Frees the room and world references and changes to a fresh world scene, so the
+## player, enemies and cameras start clean. Works from the main menu and from the world.
 func _restart_world() -> void:
 	world_reloading.emit()
 	SceneManager.reset()
 	CameraManager.clear_current_camera()
 	get_tree().paused = false
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file(WORLD_SCENE)
 
 
 func _collect_data() -> Dictionary:

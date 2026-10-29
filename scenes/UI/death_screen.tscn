@@ -73,10 +73,11 @@ _data = {
 &"open": SubResource("Animation_qrt7s")
 }
 
-[node name="DeathScreen" type="CanvasLayer" unique_id=980799414]
+[node name="DeathScreen" type="CanvasLayer" unique_id=980799414 node_paths=PackedStringArray("_buttons")]
 process_mode = 3
 layer = 21
 script = ExtResource("1_g4w52")
+_buttons = [NodePath("Dim/Frame/Buttons/ContinueLabel"), NodePath("Dim/Frame/Buttons/LoadLabel"), NodePath("Dim/Frame/Buttons/QuitLabel")]
 
 [node name="Dim" type="ColorRect" parent="." unique_id=395191167]
 modulate = Color(1, 1, 1, 0)
