@@ -33,5 +33,5 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("action"):
 		lever_selected.emit(current_indicator)
 	
-	if event.is_action_pressed("run"):
+	if event.is_action_pressed("cancel"):
 		exit_puzzle.emit()

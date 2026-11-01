@@ -67,7 +67,7 @@ func _input(event: InputEvent) -> void:
 		_move_cursor(-1)
 	elif event.is_action_pressed("ui_down"):
 		_move_cursor(1)
-	elif event.is_action_pressed("run") or event.is_action_pressed("ui_cancel"):
+	elif event.is_action_pressed("cancel") or event.is_action_pressed("ui_cancel"):
 		close()
 	elif event.is_action_pressed("action") or event.is_action_pressed("ui_accept"):
 		_confirm()

@@ -167,8 +167,9 @@ func _handle_open_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
+## cancel goes before aim, on the mouse both are the right button
 func _handle_browse(event: InputEvent) -> void:
-	if event.is_action_pressed("run"):
+	if event.is_action_pressed("cancel"):
 		close()
 		return
 	if event.is_action_pressed("aim"):
@@ -204,7 +205,7 @@ func _handle_commands(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_down"):
 		_command = wrapi(_command + 1, 0, COMMAND_COUNT) as Command
 		_refresh()
-	elif event.is_action_pressed("run"):
+	elif event.is_action_pressed("cancel"):
 		_set_state(State.BROWSE)
 		_refresh()
 	elif event.is_action_pressed("action"):
@@ -216,7 +217,7 @@ func _handle_combine_target(event: InputEvent) -> void:
 		_status = "Combinar con que?"
 		_refresh()
 		return
-	if event.is_action_pressed("run"):
+	if event.is_action_pressed("cancel"):
 		_combine_from = -1
 		_status = ""
 		_set_state(State.BROWSE)
@@ -226,13 +227,13 @@ func _handle_combine_target(event: InputEvent) -> void:
 
 
 func _handle_check(event: InputEvent) -> void:
-	if event.is_action_pressed("action") or event.is_action_pressed("run"):
+	if event.is_action_pressed("action") or event.is_action_pressed("cancel"):
 		_set_state(State.COMMANDS)
 		_refresh()
 
 
 func _handle_files(event: InputEvent) -> void:
-	if event.is_action_pressed("aim") or event.is_action_pressed("run"):
+	if event.is_action_pressed("aim") or event.is_action_pressed("cancel"):
 		_status = ""
 		_focus = Focus.FILES
 		_set_state(State.BROWSE)
@@ -281,7 +282,7 @@ func _move_file_cursor(event: InputEvent) -> bool:
 
 func _handle_reading(event: InputEvent) -> void:
 	var last: bool = _reader_page >= _reader_pages.size() - 1
-	if event.is_action_pressed("run"):
+	if event.is_action_pressed("cancel"):
 		_close_reader()
 	elif event.is_action_pressed("right") or event.is_action_pressed("action"):
 		if last:

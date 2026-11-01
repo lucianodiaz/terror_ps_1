@@ -131,27 +131,26 @@ func _input(event: InputEvent) -> void:
 	if MessageManager.is_blocking():
 		if event.is_action_pressed("action"):
 			MessageManager.advance()
-		elif event.is_action_pressed("run"):
+		elif event.is_action_pressed("cancel"):
 			MessageManager.clear()
 		return
-	if event.is_action("aim"):
-		movement_player_component.is_aiming = event.is_pressed()
-	if event.is_action_pressed("action"):
-		if is_aiming_weapon:
-			_try_attack()
-		else:
-			_interact()
+	if PauseScreen.is_open():
+		return
+	if event.is_action_pressed("pause"):
+		PauseScreen.open.call_deferred()
+		return
+	## Shooting is read in _physics_process, RT is an axis and every bit of
+	## trigger travel would count as a new press here
+	if event.is_action_pressed("action") and not is_aiming_weapon:
+		_interact()
 
 	if event.is_action_pressed("run"):
 		movement_player_component.set_run_speed()
+		if not is_in_puzzle and not is_hurt:
+			movement_player_component.try_quick_turn()
 
 	if event.is_action_released("run"):
 		movement_player_component.set_walk_speed()
-
-	## Debug shortcut until there is an options screen
-	if event.is_action_pressed("toggle_controls"):
-		SettingsManager.toggle_control_scheme()
-		print("control scheme: ", GameSettings.ControlScheme.keys()[SettingsManager.control_scheme])
 
 func set_in_puzzle(value: bool) -> void:
 	is_in_puzzle = value
@@ -168,9 +167,11 @@ func _physics_process(delta: float) -> void:
 	## The OneShot can end without reaching the key, aborted for example
 	elif is_hurt and not _hit_requested and not animation_tree.get(HIT_ACTIVE):
 		is_hurt = false
-	## Releasing aim while the inventory is open never reaches _input
-	if movement_player_component.is_aiming and not Input.is_action_pressed("aim"):
-		movement_player_component.is_aiming = false
+	## Polled so LT and LB together only stop aiming once both are released
+	movement_player_component.is_aiming = Input.is_action_pressed("aim") and not is_hurt \
+		and not MessageManager.is_blocking()
+	if is_aiming_weapon and (Input.is_action_just_pressed("shoot") or Input.is_action_just_pressed("action")):
+		_try_attack()
 
 	if is_hurt:
 		movement_player_component.stop_movement()
@@ -242,7 +243,7 @@ func _update_locomotion_state() -> void:
 	is_moving = not is_in_puzzle and not is_hurt \
 		and horizontal_velocity.length() > velocity_component.velocity_threshold
 	is_running = is_moving and movement_player_component.is_running()
-	is_moving_backward = is_moving and horizontal_velocity.dot(-global_basis.z) < 0.0
+	is_moving_backward = is_moving and movement_player_component.is_moving_backward()
 
 
 func _on_health_changed(_current_health: float, dmg_received: float) -> void:
@@ -278,18 +279,18 @@ func _update_aim_state() -> void:
 
 
 func _try_attack() -> void:
-	if is_hurt or is_in_puzzle or weapon_holder == null:
+	if is_hurt or is_in_puzzle or is_attacking or weapon_holder == null:
 		return
 	if not weapon_holder.try_attack():
-		return
-	if is_attacking:
 		return
 	var data: WeaponData = weapon_holder.get_weapon_data()
 	if animation_tree and data and data.attack_animation != &"":
 		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	is_attacking = true
 
+## Aborting the OneShot skips the _on_end_attack key, so the flag is released here
 func _cancel_attack() -> void:
+	is_attacking = false
 	if weapon_holder:
 		weapon_holder.cancel_attack()
 	if animation_tree:

@@ -35,7 +35,7 @@ func close() -> void:
 func _input(event: InputEvent) -> void:
 	if not _is_open:
 		return
-	if _is_option_selected or LoadScreen.is_open():
+	if _is_option_selected or LoadScreen.is_open() or OptionScreen.is_open():
 		return
 	_move_grid(event)
 	_action_button_selected(event)
@@ -84,8 +84,8 @@ func select_button_action() -> void:
 			## Deferred so this same press doesn't reach the LoadScreen and pick a slot
 			LoadScreen.open.call_deferred(LoadScreen.Mode.LOAD)
 		2:
-			print("Options")
-			## Open Options Screen
+			## Deferred for the same reason as the LoadScreen
+			OptionScreen.open.call_deferred()
 		3:
 			_is_option_selected = true
 			get_tree().quit()
