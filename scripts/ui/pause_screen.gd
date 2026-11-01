@@ -1,94 +1,92 @@
+## In-game pause menu, the scene is the autoload. The buttons work with the
+## mouse, hovering one selects it and only a click on a button presses it.
+## Keys and the pad are handled in _input and never reach the game underneath.
 extends CanvasLayer
 
 const MAIN_MENU_SCENE: String = "res://scenes/main_menu.tscn"
+const FONT_SIZE: int = 40
+const FONT_COLOR: Color = Color(0.92, 0.94, 1.0)
+const BUTTON_HEIGHT: float = 70.0
 
-@export var _buttons: Array[Label] = []
-
+@export var _buttons: Array[Button] = []
 
 var _button_normal: StyleBoxFlat = null
 var _button_focused: StyleBoxFlat = null
 
-
+## Button last focused, by the keys or by hovering it
 var _index: int = 0
-var _is_option_selected: bool = false
+var _is_open: bool = false
+## The world hides the cursor, it comes back while the menu is open
+var _previous_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
 
-var _is_open: bool = true
 
 func is_open() -> bool:
 	return _is_open
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_styles()
-	_refresh_buttons()
+	for i in _buttons.size():
+		var button: Button = _buttons[i]
+		_style_button(button)
+		## Hover moves the focus, so mouse and keys never highlight two buttons
+		button.mouse_entered.connect(button.grab_focus)
+		button.focus_entered.connect(func() -> void: _index = i)
+		button.pressed.connect(_on_button_pressed.bind(i))
+	## Loading a save from here leaves the world, the menu goes with it
+	SaveManager.world_reloading.connect(close)
 	visible = false
 
 
 func open() -> void:
+	if _is_open:
+		return
 	_is_open = true
+	_previous_mouse_mode = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	visible = true
-	_index = 0
-	_is_option_selected = false
-	_refresh_buttons()
+	_buttons[0].grab_focus()
 	get_tree().paused = true
 
 
 func close() -> void:
-	visible = false
-	_index = 0
-	_is_option_selected = false
+	if not _is_open:
+		return
 	_is_open = false
+	visible = false
+	Input.mouse_mode = _previous_mouse_mode
 	get_tree().paused = false
 
 
 func _input(event: InputEvent) -> void:
-	if not _is_open:
+	if not _is_open or LoadScreen.is_open() or OptionScreen.is_open():
 		return
-	if _is_option_selected or LoadScreen.is_open() or OptionScreen.is_open():
+	if event is InputEventMouse:
+		if event.is_action_pressed("cancel"):
+			get_viewport().set_input_as_handled()
+			close()
 		return
-	_move_grid(event)
-	_action_button_selected(event)
-
-
-func _refresh_buttons() -> void:
-	for i in range(_buttons.size()):
-		_set_button_focus(_buttons[i], i == _index)
-
-
-func _move_grid(event: InputEvent) -> void:
+	get_viewport().set_input_as_handled()
 	if event.is_action_pressed("ui_up"):
-		_index = _index - 1
+		_move_focus(-1)
 	elif event.is_action_pressed("ui_down"):
-		_index = _index + 1
+		_move_focus(1)
 	elif event.is_action_pressed("pause") or event.is_action_pressed("cancel"):
 		close()
+	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("action"):
+		_on_button_pressed(_index)
+
+
+func _move_focus(step: int) -> void:
+	_buttons[wrapi(_index + step, 0, _buttons.size())].grab_focus()
+
+
+func _on_button_pressed(index: int) -> void:
+	if not _is_open or LoadScreen.is_open() or OptionScreen.is_open():
 		return
-	_index = wrapi(_index, 0, _buttons.size())
-	_refresh_buttons()
-
-
-func _action_button_selected(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") or event.is_action_pressed("action"):
-		select_button_action()
-
-func _set_button_focus(button: Label, focused: bool) -> void:
-	button.add_theme_stylebox_override("normal", _button_focused if focused else _button_normal)
-
-func _build_styles() -> void:
-	_button_normal = _make_style(Color(0.00, 0.00, 0.00), Color(0.15, 0.15, 0.15), 3)
-	_button_focused = _make_style(Color(0.7, 0.12, 0.15), Color(1.0, 0.85, 0.85), 4)
-
-func _make_style(bg: Color, border: Color, border_width: int) -> StyleBoxFlat:
-	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = bg
-	style.border_color = border
-	style.set_border_width_all(border_width)
-	return style
-
-
-func select_button_action() -> void:
-	match _index:
+	match index:
 		0:
-			_is_option_selected = true
 			close()
 		1:
 			## The menu stays open under the LoadScreen, cancelling comes back here.
@@ -98,6 +96,33 @@ func select_button_action() -> void:
 			## Deferred for the same reason as the LoadScreen
 			OptionScreen.open.call_deferred()
 		3:
-			_is_option_selected = true
 			close()
 			get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+
+
+func _style_button(button: Button) -> void:
+	button.custom_minimum_size.y = BUTTON_HEIGHT
+	button.add_theme_font_size_override("font_size", FONT_SIZE)
+	for color_name in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		button.add_theme_color_override(color_name, FONT_COLOR)
+	button.add_theme_color_override("font_outline_color", Color.BLACK)
+	button.add_theme_constant_override("outline_size", 6)
+	## Hover alone keeps the normal look, hovering already moves the focus
+	button.add_theme_stylebox_override("normal", _button_normal)
+	button.add_theme_stylebox_override("hover", _button_normal)
+	button.add_theme_stylebox_override("pressed", _button_focused)
+	button.add_theme_stylebox_override("hover_pressed", _button_focused)
+	button.add_theme_stylebox_override("focus", _button_focused)
+
+
+func _build_styles() -> void:
+	_button_normal = _make_style(Color(0.00, 0.00, 0.00), Color(0.15, 0.15, 0.15), 3)
+	_button_focused = _make_style(Color(0.7, 0.12, 0.15), Color(1.0, 0.85, 0.85), 4)
+
+
+func _make_style(bg: Color, border: Color, border_width: int) -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = bg
+	style.border_color = border
+	style.set_border_width_all(border_width)
+	return style

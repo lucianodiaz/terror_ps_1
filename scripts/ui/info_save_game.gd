@@ -1,7 +1,8 @@
 class_name InfoSaveGame
-extends PanelContainer
+extends Button
 
-## One row of the LoadScreen, shows what a save slot holds
+## One row of the LoadScreen, shows what a save slot holds. The focused row is
+## the selected one, hovering a row focuses it.
 
 const EMPTY_TEXT: String = "<EMPTY FILE>"
 
@@ -10,14 +11,17 @@ const EMPTY_TEXT: String = "<EMPTY FILE>"
 @onready var date_label: Label = %DateLabel
 @onready var time_label: Label = %TimeLabel
 
-var _style_normal: StyleBoxFlat = null
-var _style_selected: StyleBoxFlat = null
-
 
 func _ready() -> void:
-	_style_normal = _make_style(Color(0.00, 0.00, 0.00), Color(0.15, 0.15, 0.15), 3)
-	_style_selected = _make_style(Color(0.7, 0.12, 0.15), Color(1.0, 0.85, 0.85), 4)
-	set_selected(false)
+	var style_normal: StyleBoxFlat = _make_style(Color(0.00, 0.00, 0.00), Color(0.15, 0.15, 0.15), 3)
+	var style_selected: StyleBoxFlat = _make_style(Color(0.7, 0.12, 0.15), Color(1.0, 0.85, 0.85), 4)
+	## Hover alone keeps the normal look, hovering already moves the focus
+	add_theme_stylebox_override("normal", style_normal)
+	add_theme_stylebox_override("hover", style_normal)
+	add_theme_stylebox_override("pressed", style_selected)
+	add_theme_stylebox_override("hover_pressed", style_selected)
+	add_theme_stylebox_override("focus", style_selected)
+	mouse_entered.connect(grab_focus)
 
 
 ## index is 0 based, the label shows it from 1
@@ -41,14 +45,9 @@ func set_info(info: Dictionary) -> void:
 	time_label.text = "%02d:%02d" % [datetime["hour"], datetime["minute"]]
 
 
-func set_selected(selected: bool) -> void:
-	add_theme_stylebox_override("panel", _style_selected if selected else _style_normal)
-
-
 func _make_style(bg: Color, border: Color, border_width: int) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = bg
 	style.border_color = border
 	style.set_border_width_all(border_width)
-	style.set_content_margin_all(12)
 	return style

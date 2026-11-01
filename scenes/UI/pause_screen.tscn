@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://3rf7nd3yoh37"]
 
 [ext_resource type="Script" uid="uid://w203m143nyis" path="res://scripts/ui/pause_screen.gd" id="1_k6jvu"]
-[ext_resource type="StyleBox" uid="uid://38udan2b3mh2" path="res://assets/theme/LabelButton.tres" id="1_n8qtr"]
-[ext_resource type="LabelSettings" uid="uid://qhyd6x3n3wus" path="res://assets/theme/label_settings.tres" id="2_k6jvu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xmtkg"]
 bg_color = Color(0.19607843, 0.19607843, 0.21568628, 1)
@@ -28,7 +26,7 @@ border_color = Color(0.12, 0.12, 0.15, 1)
 [node name="PauseScreen" type="CanvasLayer" unique_id=1307009766 node_paths=PackedStringArray("_buttons")]
 layer = 20
 script = ExtResource("1_k6jvu")
-_buttons = [NodePath("Dim/GridPanel/GridScreen/Buttons/ContinueLabel"), NodePath("Dim/GridPanel/GridScreen/Buttons/LoadGameLabel"), NodePath("Dim/GridPanel/GridScreen/Buttons/OptionsLabel"), NodePath("Dim/GridPanel/GridScreen/Buttons/QuitLabel")]
+_buttons = [NodePath("Dim/GridPanel/GridScreen/Buttons/ContinueButton"), NodePath("Dim/GridPanel/GridScreen/Buttons/LoadGameButton"), NodePath("Dim/GridPanel/GridScreen/Buttons/OptionsButton"), NodePath("Dim/GridPanel/GridScreen/Buttons/QuitButton")]
 
 [node name="Dim" type="ColorRect" parent="." unique_id=7889206]
 anchors_preset = 15
@@ -87,42 +85,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ContinueLabel" type="Label" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1614382885]
+[node name="ContinueButton" type="Button" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1614382885]
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = ExtResource("1_n8qtr")
 text = "Continue"
-label_settings = ExtResource("2_k6jvu")
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="LoadGameLabel" type="Label" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1463535574]
+[node name="LoadGameButton" type="Button" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1463535574]
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = ExtResource("1_n8qtr")
 text = "Load"
-label_settings = ExtResource("2_k6jvu")
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="OptionsLabel" type="Label" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1952332282]
+[node name="OptionsButton" type="Button" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1952332282]
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = ExtResource("1_n8qtr")
 text = "Options"
-label_settings = ExtResource("2_k6jvu")
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="QuitLabel" type="Label" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1858347006]
+[node name="QuitButton" type="Button" parent="Dim/GridPanel/GridScreen/Buttons" unique_id=1858347006]
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = ExtResource("1_n8qtr")
 text = "Back to main menu"
-label_settings = ExtResource("2_k6jvu")
-horizontal_alignment = 1
-vertical_alignment = 1

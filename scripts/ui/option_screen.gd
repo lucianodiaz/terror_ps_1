@@ -62,9 +62,12 @@ var _value_labels: Array[Label] = []
 var _pad_labels: Array[Label] = []
 var _bars: Array[ProgressBar] = []
 
+## Position in _selectable of the row under the cursor, moved by the keys or by hovering
 var _index: int = 0
 var _is_open: bool = false
 var _was_paused: bool = false
+## The world hides the cursor, it comes back while the screen is open
+var _previous_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
 ## Column the cursor is on in binding rows, LEFT / RIGHT switch it
 var _column: GameSettings.Device = GameSettings.Device.KEYBOARD_MOUSE
 ## Action waiting for its new input, empty when not rebinding
@@ -95,11 +98,14 @@ func is_open() -> bool:
 func open() -> void:
 	if _is_open:
 		return
+	
 	_is_open = true
 	_index = 0
 	_column = GameSettings.Device.KEYBOARD_MOUSE
 	_waiting_action = &""
 	_held_axis = -1
+	_previous_mouse_mode = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	visible = true
 	## Opened over a paused tree, closing has to leave it paused
 	_was_paused = get_tree().paused
@@ -108,18 +114,27 @@ func open() -> void:
 	_scroll.scroll_vertical = 0
 
 
+
 func close() -> void:
 	if not _is_open:
 		return
 	_is_open = false
 	_waiting_action = &""
 	visible = false
+	Input.mouse_mode = _previous_mouse_mode
 	get_tree().paused = _was_paused
 	closed.emit()
 
 
+## Keys and pad are handled here and never go further. The mouse is left to
+## the rows (see _on_row_gui_input), unless a rebind is waiting for a click.
 func _input(event: InputEvent) -> void:
 	if not _is_open:
+		return
+	if event is InputEventMouse and _waiting_action == &"":
+		if event.is_action_pressed("cancel"):
+			get_viewport().set_input_as_handled()
+			close()
 		return
 	get_viewport().set_input_as_handled()
 	var motion: InputEventJoypadMotion = event as InputEventJoypadMotion
@@ -262,6 +277,70 @@ func _confirm() -> void:
 			close()
 
 
+func _on_row_hovered(selectable_index: int) -> void:
+	if _waiting_action != &"" or _index == selectable_index:
+		return
+	_index = selectable_index
+	_refresh()
+
+
+## A click does what confirming does, except on the parts that have their own
+## meaning: each binding column, each side of a choice and the volume bar
+func _on_row_gui_input(event: InputEvent, selectable_index: int) -> void:
+	if _waiting_action != &"":
+		return
+	var row_index: int = _selectable[selectable_index]
+	var kind: Kind = ROWS[row_index]["kind"]
+	var motion: InputEventMouseMotion = event as InputEventMouseMotion
+	if motion:
+		if kind == Kind.VOLUME and motion.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			_set_volume_from_mouse(row_index, motion.global_position)
+		elif kind == Kind.BINDING:
+			_hover_column(row_index, motion.global_position)
+		return
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	if click == null or not click.pressed or click.button_index != MOUSE_BUTTON_LEFT:
+		return
+	_panels[row_index].accept_event()
+	_index = selectable_index
+	match kind:
+		Kind.VOLUME:
+			if _bars[row_index].get_global_rect().has_point(click.global_position):
+				_set_volume_from_mouse(row_index, click.global_position)
+		Kind.BINDING:
+			_hover_column(row_index, click.global_position)
+			_confirm()
+		Kind.WINDOW_MODE, Kind.RESOLUTION:
+			var value_rect: Rect2 = _value_labels[row_index].get_global_rect()
+			var left_side: bool = value_rect.has_point(click.global_position) \
+				and click.global_position.x < value_rect.get_center().x
+			_change_value(-1 if left_side else 1)
+		_:
+			_confirm()
+	_refresh()
+
+
+## The column under the mouse becomes the selected one, the gamepad side of
+## movement stays out of reach
+func _hover_column(row_index: int, mouse_position: Vector2) -> void:
+	var device: GameSettings.Device = _column
+	if _pad_labels[row_index].get_global_rect().has_point(mouse_position):
+		device = GameSettings.Device.GAMEPAD
+	elif _value_labels[row_index].get_global_rect().has_point(mouse_position):
+		device = GameSettings.Device.KEYBOARD_MOUSE
+	if device == _column or not SettingsManager.can_rebind(ROWS[row_index]["action"], device):
+		return
+	_column = device
+	_refresh()
+
+
+func _set_volume_from_mouse(row_index: int, mouse_position: Vector2) -> void:
+	var rect: Rect2 = _bars[row_index].get_global_rect()
+	var ratio: float = clampf((mouse_position.x - rect.position.x) / rect.size.x, 0.0, 1.0)
+	SettingsManager.set_volume(ROWS[row_index]["bus"], snappedf(ratio, VOLUME_STEP))
+	_refresh()
+
+
 func _is_windowed() -> bool:
 	return SettingsManager.window_mode == DisplayServer.WINDOW_MODE_WINDOWED
 
@@ -370,8 +449,13 @@ func _build_rows() -> void:
 		var panel: PanelContainer = PanelContainer.new()
 		panel.custom_minimum_size.y = ROW_HEIGHT
 		panel.add_theme_stylebox_override("panel", _row_normal)
+		## PASS lets the wheel reach the scroll container, clicks are accepted by the row
+		panel.mouse_filter = Control.MOUSE_FILTER_PASS
+		panel.mouse_entered.connect(_on_row_hovered.bind(_selectable.size()))
+		panel.gui_input.connect(_on_row_gui_input.bind(_selectable.size()))
 		var box: HBoxContainer = HBoxContainer.new()
 		box.add_theme_constant_override("separation", COLUMN_SEPARATION)
+		box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(box)
 
 		var name_label: Label = _make_label(row["text"])
@@ -387,6 +471,8 @@ func _build_rows() -> void:
 			bar.show_percentage = false
 			bar.custom_minimum_size = BAR_SIZE
 			bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			## Clicks on it are read by the row, see _set_volume_from_mouse
+			bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			bar.add_theme_stylebox_override("background", _bar_background)
 			bar.add_theme_stylebox_override("fill", _bar_fill)
 			box.add_child(bar)

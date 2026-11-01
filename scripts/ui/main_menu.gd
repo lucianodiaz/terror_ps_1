@@ -22,7 +22,8 @@ var _time: float = 0.0
 
 
 func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	## The world hides the cursor, coming back to the title has to show it again
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if camera:
 		_camera_rotation = camera.rotation
 	if tv_light:
