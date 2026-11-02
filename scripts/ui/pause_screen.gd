@@ -17,7 +17,7 @@ var _button_focused: StyleBoxFlat = null
 var _index: int = 0
 var _is_open: bool = false
 ## The world hides the cursor, it comes back while the menu is open
-var _previous_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
+var _previous_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_HIDDEN
 
 
 func is_open() -> bool:
@@ -44,10 +44,11 @@ func open() -> void:
 		return
 	_is_open = true
 	_previous_mouse_mode = Input.mouse_mode
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	visible = true
 	_buttons[0].grab_focus()
 	get_tree().paused = true
+	Cursor.cursor_visibility = true
 
 
 func close() -> void:
@@ -57,6 +58,7 @@ func close() -> void:
 	visible = false
 	Input.mouse_mode = _previous_mouse_mode
 	get_tree().paused = false
+	Cursor.cursor_visibility = false
 
 
 func _input(event: InputEvent) -> void:

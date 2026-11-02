@@ -6,13 +6,13 @@ uniform float thickness : hint_range(0.01, 0.2) = 0.05;
 uniform float brightness : hint_range(0.1, 2.0) = 0.5;
 
 void vertex() {
-    // Hace que el objeto 3D siempre mire a la cámara (Efecto Billboard)
-    MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
-        INV_VIEW_MATRIX[0],
-        INV_VIEW_MATRIX[1],
-        INV_VIEW_MATRIX[1],
-        MODEL_MATRIX[3]
-    );
+	// Hace que el objeto 3D siempre mire a la cámara (Efecto Billboard)
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+		INV_VIEW_MATRIX[0],
+		INV_VIEW_MATRIX[1],
+		INV_VIEW_MATRIX[1],
+		MODEL_MATRIX[3]
+	);
 }
 
 void fragment() {

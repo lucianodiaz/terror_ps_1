@@ -105,7 +105,7 @@ func open() -> void:
 	_waiting_action = &""
 	_held_axis = -1
 	_previous_mouse_mode = Input.mouse_mode
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	visible = true
 	## Opened over a paused tree, closing has to leave it paused
 	_was_paused = get_tree().paused

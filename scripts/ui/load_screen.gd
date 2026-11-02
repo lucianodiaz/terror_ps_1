@@ -51,7 +51,7 @@ func open(mode: Mode, consume_item_id: String = "") -> void:
 	_previous_focus = get_viewport().gui_get_focus_owner()
 	## The world hides the cursor, the rows can be clicked
 	_previous_mouse_mode = Input.mouse_mode
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	visible = true
 	_rows[_index].grab_focus()
 	## The death screen keeps the tree paused, closing has to leave it that way

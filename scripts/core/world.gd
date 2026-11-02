@@ -18,7 +18,7 @@ func _validate_property(property: Dictionary) -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	Cursor.cursor_visibility = false
 	if initial_scene:
 		SceneManager.world = self
 		# AudioManager.play_bgm("dark_room")

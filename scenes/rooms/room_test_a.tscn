@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://33tffxfs48to" path="res://scripts/system/camera/fixed_camera.gd" id="9_rn3xe"]
 [ext_resource type="PackedScene" uid="uid://3bal8iwsg6fh" path="res://scenes/keys/key.tscn" id="10_pt6au"]
 [ext_resource type="PackedScene" uid="uid://bkmxc1lerde8y" path="res://scenes/items/clock_tower_memo.tscn" id="14_rn3xe"]
+[ext_resource type="PackedScene" uid="uid://4ig2h3371jr7" path="res://scenes/items/pain_relief_pickup.tscn" id="16_hr7r2"]
 
 [sub_resource type="Resource" id="Resource_vk0ps"]
 script = ExtResource("2_ssl2r")
@@ -236,3 +237,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.883, 1.409, 8.534)
 [node name="ClockTowerMemo" parent="." unique_id=1933074538 instance=ExtResource("14_rn3xe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1104114, 1.1595881, 4.09407)
 item_id = "marvin_report"
+
+[node name="PainReliefPickup" parent="." unique_id=2058366338 instance=ExtResource("16_hr7r2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.695845, 1.0543054, -10.257027)
+
+[node name="PainReliefPickup2" parent="." unique_id=1322277837 instance=ExtResource("16_hr7r2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.695845, 1.0543054, -10.257027)
+
+[node name="PainReliefPickup3" parent="." unique_id=2085817174 instance=ExtResource("16_hr7r2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6958447, 1.0543054, -10.257027)

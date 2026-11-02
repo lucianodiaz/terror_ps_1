@@ -87,7 +87,7 @@ var _slot_combine: StyleBoxFlat = null
 var _button_normal: StyleBoxFlat = null
 var _button_focused: StyleBoxFlat = null
 var _amount_settings: LabelSettings = null
-
+var is_player_dead: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -139,6 +139,9 @@ func close() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
+		var player: Player = _get_player()
+		if player == null or player.is_dead:
+			return
 		if is_open():
 			close()
 		else:
@@ -598,6 +601,7 @@ func _item_name(index: int) -> String:
 func _get_health_ratio() -> float:
 	var player: Player = _get_player()
 	var health: HealthComponent = player.health_component if player else null
+	is_player_dead = health.is_died
 	if health == null or health.max_health <= 0.0:
 		return 1.0
 	return health.get_health_ratio()

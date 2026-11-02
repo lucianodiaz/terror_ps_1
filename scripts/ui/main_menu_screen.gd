@@ -44,6 +44,7 @@ func open() -> void:
 	_is_open = true
 	visible = true
 	_focus_first.call_deferred()
+	Cursor.cursor_visibility = true
 
 
 func close() -> void:

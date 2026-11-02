@@ -4,4 +4,4 @@ extends CameraBase
 
 
 func activate() -> void:
-    CameraManager.switch_to_camera(self)
+	CameraManager.switch_to_camera(self)

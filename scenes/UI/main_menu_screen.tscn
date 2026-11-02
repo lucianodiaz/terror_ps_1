@@ -31,6 +31,7 @@ mouse_filter = 2
 [node name="NewGameButton" type="Button" parent="Dim/Buttons" unique_id=204673338]
 layout_mode = 2
 size_flags_vertical = 6
+tooltip_text = "Start a new game"
 text = "New Game"
 
 [node name="LoadGameButton" type="Button" parent="Dim/Buttons" unique_id=1577477377]
