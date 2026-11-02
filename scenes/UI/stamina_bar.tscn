@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/stamina_bar.gd" id="1_bar"]
+
+[node name="StaminaBar" type="Control"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = -96.0
+offset_right = 404.0
+offset_bottom = -76.0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("1_bar")

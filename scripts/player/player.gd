@@ -47,6 +47,7 @@ const HEALTH_STATE_NORMAL : StringName = &"normal"
 @export var velocity_component: VelocityComponent
 @export var weapon_holder: WeaponHolderComponent
 @export var sigth_cone: VisionCone3D
+@export var stamina_component: StaminaComponent
 
 
 ## Door or any node with an interact() method (Pickup, FlagTrigger, ...)
@@ -144,13 +145,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("action") and not is_aiming_weapon:
 		_interact()
 
-	if event.is_action_pressed("run"):
-		movement_player_component.set_run_speed()
-		if not is_in_puzzle and not is_hurt:
-			movement_player_component.try_quick_turn()
-
-	if event.is_action_released("run"):
-		movement_player_component.set_walk_speed()
+	## The gait itself is polled in _physics_process, stamina can run out while run is held
+	if event.is_action_pressed("run") and not is_in_puzzle and not is_hurt:
+		movement_player_component.try_quick_turn()
+		if stamina_component and not stamina_component.can_run():
+			stamina_component.deny()
 
 func set_in_puzzle(value: bool) -> void:
 	is_in_puzzle = value
@@ -173,11 +172,16 @@ func _physics_process(delta: float) -> void:
 	if is_aiming_weapon and (Input.is_action_just_pressed("shoot") or Input.is_action_just_pressed("action")):
 		_try_attack()
 
+	var can_run: bool = stamina_component == null or stamina_component.can_run()
+	movement_player_component.set_running(Input.is_action_pressed("run") and can_run)
+
 	if is_hurt:
 		movement_player_component.stop_movement()
 	elif not is_in_puzzle and movement_player_component:
 		movement_player_component.movement(delta)
 	_update_locomotion_state()
+	if stamina_component:
+		stamina_component.process_stamina(delta, is_running, is_moving)
 	_update_aim_state()
 	
 	#look for a closest enemy
@@ -281,8 +285,18 @@ func _update_aim_state() -> void:
 func _try_attack() -> void:
 	if is_hurt or is_in_puzzle or is_attacking or weapon_holder == null:
 		return
+	## Only melee weapons cost stamina and scale their damage with it
+	var melee: MeleeWeapon = weapon_holder.current_weapon as MeleeWeapon if weapon_holder.has_weapon() else null
+	var uses_stamina: bool = melee != null and stamina_component != null
+	if uses_stamina:
+		if not stamina_component.can_attack():
+			stamina_component.deny()
+			return
+		melee.damage_multiplier = stamina_component.get_damage_multiplier()
 	if not weapon_holder.try_attack():
 		return
+	if uses_stamina:
+		stamina_component.spend_attack()
 	var data: WeaponData = weapon_holder.get_weapon_data()
 	if animation_tree and data and data.attack_animation != &"":
 		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)

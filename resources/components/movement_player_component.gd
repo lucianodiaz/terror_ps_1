@@ -70,6 +70,13 @@ func set_run_backward_speed() -> void:
 func reset_speed() -> void:
 	_set_gait(false, false)
 
+## Keeps the backward flag, so it can be called every frame without
+## cutting short the backward walk while the body slows down
+func set_running(running:bool) -> void:
+	if _running == running:
+		return
+	_set_gait(running, _backward)
+
 func is_running() -> bool:
 	return _running
 

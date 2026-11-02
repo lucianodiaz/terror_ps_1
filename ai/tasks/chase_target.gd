@@ -13,12 +13,7 @@ func _tick(_delta: float) -> Status:
 	var target: Node3D = blackboard.get_var(target_var, null, false) as Node3D
 	if enemy == null or not is_instance_valid(target):
 		return FAILURE
-	var offset: Vector3 = target.global_position - enemy.global_position
-	offset.y = 0.0
-	if offset.length() <= enemy.attack_range:
-		enemy.stop_movement()
-		return SUCCESS
-	enemy.move_to(target.global_position, true)
+	enemy.pursue(target, enemy.run_speed)
 	return RUNNING
 
 

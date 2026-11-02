@@ -7,6 +7,8 @@ extends Weapon
 
 ## Each swing bumps this, timers from an older swing see a different value and do nothing
 var _swing_id: int = 0
+## Set by the player from its stamina before each swing
+var damage_multiplier: float = 1.0
 
 
 func _ready() -> void:
@@ -28,6 +30,8 @@ func _perform() -> bool:
 	if hit_component == null:
 		return true
 	_swing_id += 1
+	if data:
+		hit_component.damage_amount = data.damage * damage_multiplier
 	var window: Vector2 = data.hit_window if data else Vector2(0.0, 0.3)
 	hit_component.set_active(false)
 	get_tree().create_timer(window.x, false).timeout.connect(_set_hitbox.bind(true, _swing_id))

@@ -63,30 +63,23 @@ children = [SubResource("BTCondition_alerted"), SubResource("BTSequence_scream")
 [sub_resource type="BTCondition" id="BTCondition_range"]
 script = ExtResource("8_range")
 
-[sub_resource type="BTAction" id="BTAction_stop_attack"]
-script = ExtResource("2_stop")
-
-[sub_resource type="BTAction" id="BTAction_face_attack"]
-script = ExtResource("6_face")
-max_time = 0.4
-
 [sub_resource type="BTAction" id="BTAction_attack"]
 script = ExtResource("9_attack")
 
 [sub_resource type="BTSequence" id="BTSequence_attack"]
 custom_name = "AttackInRange"
-children = [SubResource("BTCondition_range"), SubResource("BTAction_stop_attack"), SubResource("BTAction_face_attack"), SubResource("BTAction_attack")]
+children = [SubResource("BTCondition_range"), SubResource("BTAction_attack")]
 
 [sub_resource type="BTAction" id="BTAction_chase"]
 script = ExtResource("10_chase")
 
-[sub_resource type="BTSelector" id="BTSelector_engage"]
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_engage"]
 custom_name = "Engage"
 children = [SubResource("BTSequence_attack"), SubResource("BTAction_chase")]
 
 [sub_resource type="BTSequence" id="BTSequence_combat"]
 custom_name = "Combat"
-children = [SubResource("BTCondition_target"), SubResource("BTSelector_alert"), SubResource("BTSelector_engage")]
+children = [SubResource("BTCondition_target"), SubResource("BTSelector_alert"), SubResource("BTDynamicSelector_engage")]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_q4spr"]
 

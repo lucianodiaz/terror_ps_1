@@ -15,6 +15,9 @@ const LIFE_STATE_DEAD : StringName = &"dead"
 const BB_TARGET : StringName = &"target"
 const BB_ALERTED : StringName = &"alerted"
 
+## Extra distance required to resume pursuing after braking, avoids stop/go jitter at the edge
+const PURSUE_RESUME_MARGIN : float = 0.25
+
 @export var health_component: HealthComponent
 @export var animation_tree: AnimationTree
 @export var vision_cone: VisionCone3D
@@ -28,7 +31,13 @@ const BB_ALERTED : StringName = &"alerted"
 @export var walk_speed: float = 1.5
 @export var run_speed: float = 4.5
 @export var attack_range: float = 1.6
+## Closer than this the enemy brakes instead of pushing into the target
+@export var chase_stop_distance: float = 0.9
+## Speed used to keep closing in while the attack animation plays (0 = attack in place)
+@export var attack_move_speed: float = 2.5
 @export var turn_speed: float = 8.0
+## Lower than turn_speed so the player can sidestep an attack in progress
+@export var attack_turn_speed: float = 5.0
 @export_range(0.0, 3.0, 0.05, "suffix:s") var hit_stun_time: float = 0.6
 @export_range(0.0, 10.0, 0.1, "suffix:s") var lose_target_time: float = 3.0
 
@@ -72,7 +81,7 @@ func _physics_process(delta: float) -> void:
 		velocity_component.decelerate()
 
 	velocity_component.move(self, delta)
-	_face_velocity(delta)
+	_update_facing(delta)
 	_update_locomotion_state()
 	if target and target.is_dead:
 		_clear_target()
@@ -94,29 +103,66 @@ func move_to(point: Vector3, run: bool) -> void:
 	if nav_agent == null or is_dead:
 		return
 	is_running = run
-	velocity_component.set_max_speed(run_speed if run else walk_speed)
-	if not _has_destination or nav_agent.target_position.distance_squared_to(point) > 0.0625:
-		nav_agent.target_position = point
-	_has_destination = true
+	_set_destination(point, run_speed if run else walk_speed)
 
-func stop_movement() -> void:
+## Follows a moving node, braking smoothly once inside chase_stop_distance
+func pursue(node: Node3D, speed: float) -> void:
+	if nav_agent == null or is_dead or not is_instance_valid(node):
+		return
+	var stop_distance: float = chase_stop_distance
+	if not _has_destination:
+		stop_distance += PURSUE_RESUME_MARGIN
+	if speed <= 0.0 or get_flat_distance_to(node.global_position) <= stop_distance:
+		halt()
+		return
+	is_running = speed > walk_speed
+	_set_destination(node.global_position, speed)
+
+## Decelerates to a stop, unlike stop_movement which kills velocity instantly
+func halt() -> void:
 	_has_destination = false
 	is_running = false
+
+func stop_movement() -> void:
+	halt()
 	if velocity_component:
 		velocity_component.stop_movement()
 
 func is_navigation_finished() -> bool:
 	return not _has_destination or nav_agent == null or nav_agent.is_navigation_finished()
 
+func get_flat_distance_to(point: Vector3) -> float:
+	var offset: Vector3 = point - global_position
+	offset.y = 0.0
+	return offset.length()
+
+func _set_destination(point: Vector3, speed: float) -> void:
+	velocity_component.set_max_speed(speed)
+	if not _has_destination or nav_agent.target_position.distance_squared_to(point) > 0.0625:
+		nav_agent.target_position = point
+	_has_destination = true
+
 ## Returns true once the enemy is looking at the point
 func face_point(point: Vector3, delta: float, tolerance_deg: float = 10.0) -> bool:
+	return _turn_towards(point, turn_speed, delta, tolerance_deg)
+
+func _turn_towards(point: Vector3, speed: float, delta: float, tolerance_deg: float = 10.0) -> bool:
 	var to_point: Vector3 = point - global_position
 	to_point.y = 0.0
 	if to_point.length_squared() <= 0.0001:
 		return true
 	var target_yaw: float = atan2(-to_point.x, -to_point.z)
-	rotation.y = lerp_angle(rotation.y, target_yaw, clamp(turn_speed * delta, 0.0, 1.0))
+	rotation.y = lerp_angle(rotation.y, target_yaw, clamp(speed * delta, 0.0, 1.0))
 	return absf(angle_difference(rotation.y, target_yaw)) <= deg_to_rad(tolerance_deg)
+
+## Tracks the target at close range or while attacking, otherwise faces where it is walking
+func _update_facing(delta: float) -> void:
+	if not is_dead and not is_stunned and is_instance_valid(target):
+		var attacking: bool = is_attacking()
+		if attacking or get_flat_distance_to(target.global_position) <= attack_range:
+			_turn_towards(target.global_position, attack_turn_speed if attacking else turn_speed, delta)
+			return
+	_face_velocity(delta)
 
 func _face_velocity(delta: float) -> void:
 	var horizontal_velocity: Vector3 = velocity_component.velocity
