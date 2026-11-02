@@ -9,14 +9,27 @@ const HIT_ACTIVE : StringName = &"parameters/HitShot/active"
 const LIFE_STATE_REQUEST : StringName = &"parameters/LifeState/transition_request"
 const LIFE_STATE_DEAD : StringName = &"dead"
 
-## Transition node between locomotion ("normal") and the weapon's aim pose ("aim")
+## Transition node between locomotion ("normal") and the weapon's own aim locomotion ("aim")
 const AIM_STATE_REQUEST : StringName = &"parameters/AimState/transition_request"
 const AIM_STATE_NORMAL : StringName = &"normal"
 const AIM_STATE_AIM : StringName = &"aim"
+## Transition inside the aim locomotion between the aim pose and the aim walk
+const AIM_MOVE_REQUEST : StringName = &"parameters/AimMove/transition_request"
+const AIM_MOVE_IDLE : StringName = &"idle"
+const AIM_MOVE_WALK : StringName = &"walk"
+## TimeScale over the aim walk, negative walks it backwards
+const AIM_WALK_SCALE : StringName = &"parameters/AimWalkScale/scale"
+## Whole body, for attacks that start standing still
 const ATTACK_REQUEST : StringName = &"parameters/AttackShot/request"
 const ATTACK_ACTIVE : StringName = &"parameters/AttackShot/active"
+## Filtered to the upper body so the legs keep the aim walk, for attacks that
+## start moving. The ".." entry lets the _on_end_attack key through.
+const ATTACK_WALK_REQUEST : StringName = &"parameters/AttackWalkShot/request"
+const ATTACK_WALK_ACTIVE : StringName = &"parameters/AttackWalkShot/active"
 ## AnimationNodeAnimation nodes whose clip comes from the equipped WeaponData
-const AIM_ANIM_NODE : StringName = &"AimAnim"
+const AIM_IDLE_ANIM_NODE : StringName = &"AimIdleAnim"
+const AIM_WALK_ANIM_NODE : StringName = &"AimWalkAnim"
+const ATTACK_WALK_ANIM_NODE : StringName = &"AttackWalkAnim"
 const ATTACK_ANIM_NODE : StringName = &"AttackAnim"
 
 ## Transition node between then locomotion and Injured locomotion
@@ -40,6 +53,8 @@ const HEALTH_STATE_NORMAL : StringName = &"normal"
 @export_range(0.0, 180.0, 0.1, "radians_as_degrees") var head_look_limit_angle: float = deg_to_rad(70.0)
 ## Influence per second while the head blends in and out of looking at observable_object
 @export var head_look_blend_speed: float = 4.0
+## Playback speed of the aim walk clip, to match it with the aim walking speed
+@export_range(0.1, 3.0, 0.01) var aim_walk_time_scale: float = 1.0
 
 @export_group("Components")
 @export var movement_player_component: MovementPlayerComponent
@@ -66,6 +81,10 @@ var observable_object: Node3D = null
 ## Covers the frame between the hit request and the OneShot reporting itself active
 var _hit_requested: bool = false
 var is_attacking: bool = false
+## Same as _hit_requested, for the attack OneShots
+var _attack_requested: bool = false
+## The standing attack animates the legs too, so the body holds still until it ends
+var _attack_standing: bool = false
 ## Released by the _on_end_hurt key of the hit clip, not by the OneShot ending
 var is_hurt: bool = false
 
@@ -75,6 +94,7 @@ var is_aiming_weapon: bool:
 			and weapon_holder != null and weapon_holder.has_weapon()
 
 var _aim_state: StringName = AIM_STATE_NORMAL
+var _aim_move: StringName = AIM_MOVE_IDLE
 var _head_look: LookAtModifier3D = null
 
 
@@ -166,6 +186,12 @@ func _physics_process(delta: float) -> void:
 	## The OneShot can end without reaching the key, aborted for example
 	elif is_hurt and not _hit_requested and not animation_tree.get(HIT_ACTIVE):
 		is_hurt = false
+	var attack_active: bool = animation_tree.get(ATTACK_ACTIVE) or animation_tree.get(ATTACK_WALK_ACTIVE)
+	if _attack_requested and attack_active:
+		_attack_requested = false
+	## Weapons without an attack clip never fire the OneShot, nor reach _on_end_attack
+	elif is_attacking and not _attack_requested and not attack_active:
+		is_attacking = false
 	## Polled so LT and LB together only stop aiming once both are released
 	movement_player_component.is_aiming = Input.is_action_pressed("aim") and not is_hurt \
 		and not MessageManager.is_blocking()
@@ -175,7 +201,9 @@ func _physics_process(delta: float) -> void:
 	var can_run: bool = stamina_component == null or stamina_component.can_run()
 	movement_player_component.set_running(Input.is_action_pressed("run") and can_run)
 
-	if is_hurt:
+	movement_player_component.is_facing_locked = movement_player_component.is_aiming \
+		and is_instance_valid(current_enemy)
+	if is_hurt or (is_attacking and _attack_standing):
 		movement_player_component.stop_movement()
 	elif not is_in_puzzle and movement_player_component:
 		movement_player_component.movement(delta)
@@ -275,40 +303,60 @@ func _on_health_changed(_current_health: float, dmg_received: float) -> void:
 func _update_aim_state() -> void:
 	if animation_tree == null:
 		return
-	var target: StringName = AIM_STATE_AIM if is_aiming_weapon and not is_hurt else AIM_STATE_NORMAL
-	if target == _aim_state:
-		return
-	_aim_state = target
-	animation_tree.set(AIM_STATE_REQUEST, _aim_state)
+	var aim_state: StringName = AIM_STATE_AIM if is_aiming_weapon and not is_hurt else AIM_STATE_NORMAL
+	if aim_state != _aim_state:
+		_aim_state = aim_state
+		animation_tree.set(AIM_STATE_REQUEST, _aim_state)
+	var aim_move: StringName = AIM_MOVE_WALK if is_moving else AIM_MOVE_IDLE
+	if aim_move != _aim_move:
+		_aim_move = aim_move
+		animation_tree.set(AIM_MOVE_REQUEST, _aim_move)
+	animation_tree.set(AIM_WALK_SCALE, -aim_walk_time_scale if is_moving_backward else aim_walk_time_scale)
 
 
 func _try_attack() -> void:
-	if is_hurt or is_in_puzzle or is_attacking or weapon_holder == null:
+	if is_hurt or is_in_puzzle or is_attacking or weapon_holder == null or not weapon_holder.has_weapon():
 		return
+	var data: WeaponData = weapon_holder.get_weapon_data()
+	## Walking makes both kinds of weapon less precise, scaled by how fast the body moves
+	var unsteadiness: float = movement_player_component.get_movement_ratio()
 	## Only melee weapons cost stamina and scale their damage with it
-	var melee: MeleeWeapon = weapon_holder.current_weapon as MeleeWeapon if weapon_holder.has_weapon() else null
+	var melee: MeleeWeapon = weapon_holder.current_weapon as MeleeWeapon
 	var uses_stamina: bool = melee != null and stamina_component != null
-	if uses_stamina:
-		if not stamina_component.can_attack():
-			stamina_component.deny()
-			return
-		melee.damage_multiplier = stamina_component.get_damage_multiplier()
+	if uses_stamina and not stamina_component.can_attack():
+		stamina_component.deny()
+		return
+	if melee:
+		var multiplier: float = stamina_component.get_damage_multiplier() if uses_stamina else 1.0
+		if data:
+			multiplier *= lerpf(1.0, data.moving_damage_multiplier, unsteadiness)
+		melee.damage_multiplier = multiplier
+	var ranged: RangedWeapon = weapon_holder.current_weapon as RangedWeapon
+	if ranged and data:
+		ranged.spread = deg_to_rad(data.moving_spread) * unsteadiness
 	if not weapon_holder.try_attack():
 		return
 	if uses_stamina:
 		stamina_component.spend_attack()
-	var data: WeaponData = weapon_holder.get_weapon_data()
-	if animation_tree and data and data.attack_animation != &"":
-		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	_attack_standing = not is_moving
+	var clip: StringName = &""
+	if data:
+		clip = data.attack_animation if _attack_standing else data.get_attack_walk_animation()
+	if animation_tree and clip != &"":
+		var request: StringName = ATTACK_REQUEST if _attack_standing else ATTACK_WALK_REQUEST
+		animation_tree.set(request, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		_attack_requested = true
 	is_attacking = true
 
 ## Aborting the OneShot skips the _on_end_attack key, so the flag is released here
 func _cancel_attack() -> void:
 	is_attacking = false
+	_attack_requested = false
 	if weapon_holder:
 		weapon_holder.cancel_attack()
 	if animation_tree:
 		animation_tree.set(ATTACK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
+		animation_tree.set(ATTACK_WALK_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 
 
 ## Each weapon brings its own aim and attack clips, the tree keeps one node for each
@@ -319,8 +367,11 @@ func _on_weapon_changed(weapon: Weapon) -> void:
 	var root: AnimationNodeBlendTree = animation_tree.tree_root as AnimationNodeBlendTree
 	if root == null:
 		return
-	_set_tree_clip(root, AIM_ANIM_NODE, weapon.data.aim_animation)
+	_set_tree_clip(root, AIM_IDLE_ANIM_NODE, weapon.data.aim_animation)
+	var aim_walk: StringName = weapon.data.aim_walk_animation
+	_set_tree_clip(root, AIM_WALK_ANIM_NODE, aim_walk if aim_walk != &"" else weapon.data.aim_animation)
 	_set_tree_clip(root, ATTACK_ANIM_NODE, weapon.data.attack_animation)
+	_set_tree_clip(root, ATTACK_WALK_ANIM_NODE, weapon.data.get_attack_walk_animation())
 
 
 func _set_tree_clip(root: AnimationNodeBlendTree, node_name: StringName, clip: StringName) -> void:

@@ -6,7 +6,8 @@ extends Node
 @export_range(0.0, 10.0, 0.1) var backward_speed:float = 2.5
 @export_range(0.0, 10.0, 0.1) var run_speed:float = 6.0
 @export_range(0.0, 10.0, 0.1) var run_backward_speed:float = 3.0
-@export_range(0.0, 10.0, 0.1) var aim_speed:float = 4.0
+## Scales whatever speed applies while aiming, injured or not. Aiming never runs.
+@export_range(0.0, 1.0, 0.01) var aim_speed_multiplier:float = 0.45
 
 @export_range(0.0, 10.0, 0.1) var damaged_walk_speed:float = 1.5
 @export_range(0.0, 10.0, 0.1) var damaged_backward_speed:float = 1.5
@@ -32,7 +33,15 @@ extends Node
 @export var velocity_component: VelocityComponent
 
 var current_speed:float = 0.0
-var is_aiming:bool = false
+var is_aiming:bool = false:
+	set(value):
+		if is_aiming == value:
+			return
+		is_aiming = value
+		_apply_speed()
+## Set while something else turns the body, like the aim lock on an enemy. The
+## stick then walks towards where it points without turning the body.
+var is_facing_locked:bool = false
 ## Picks the damaged_* speed set instead of the normal one
 var is_injured:bool = false:
 	set(value):
@@ -78,9 +87,10 @@ func set_running(running:bool) -> void:
 	_set_gait(running, _backward)
 
 func is_running() -> bool:
-	return _running
+	return _running and not is_aiming
 
-## Only tank controls walk backwards, direction controls always walk where the body faces
+## Direction controls only walk backwards while the facing is locked, otherwise
+## the body turns to where the stick points
 func is_moving_backward() -> bool:
 	return _backward
 
@@ -90,16 +100,27 @@ func _set_gait(running:bool, backward:bool) -> void:
 	_apply_speed()
 
 func _apply_speed() -> void:
+	var running : bool = is_running()
 	if is_injured:
 		if _backward:
-			current_speed = damaged_run_backward_speed if _running else damaged_backward_speed
+			current_speed = damaged_run_backward_speed if running else damaged_backward_speed
 		else:
-			current_speed = damaged_run_speed if _running else damaged_walk_speed
+			current_speed = damaged_run_speed if running else damaged_walk_speed
 	else:
 		if _backward:
-			current_speed = run_backward_speed if _running else backward_speed
+			current_speed = run_backward_speed if running else backward_speed
 		else:
-			current_speed = run_speed if _running else walk_speed
+			current_speed = run_speed if running else walk_speed
+	if is_aiming:
+		current_speed *= aim_speed_multiplier
+
+## 0 standing still, 1 at the top speed of the current gait
+func get_movement_ratio() -> float:
+	if velocity_component == null or current_speed <= 0.0:
+		return 0.0
+	var horizontal : Vector3 = velocity_component.velocity
+	horizontal.y = 0.0
+	return clampf(horizontal.length() / current_speed, 0.0, 1.0)
 
 func stop_movement() -> void:
 	## Next time the player moves we want a fresh snapshot, the camera may have
@@ -154,10 +175,6 @@ func _tank_movement(delta:float) -> void:
 	_reference_locked = false
 	_tank_turn(delta)
 
-	if is_aiming:
-		stop_movement()
-		return
-
 	var move_input : float = _digital_axis(&"backward", &"forward")
 	if _backward_blocked:
 		move_input = maxf(move_input, 0.0)
@@ -174,23 +191,25 @@ func _tank_movement(delta:float) -> void:
 
 
 ## The stick is a direction on screen. The body turns to face it and walks
-## there, so it never walks backwards.
+## there, unless the facing is locked.
 func _modern_movement(input:Vector2, delta:float) -> void:
-	_set_gait(_running, false)
-	## While aiming the stick turns the body like tank controls, so the camera
-	## doesn't get to decide where the character points
-	if is_aiming:
-		character_body.rotation.y -= input.x * turn_speed * delta
-		stop_movement()
-		return
-
 	var reference : Basis = _get_reference_basis()
 	## reference.z points behind the camera, hence the minus on the forward axis
 	var direction : Vector3 = (reference.x * input.x - reference.z * input.y).normalized()
 
-	_face_direction(direction, delta)
-
 	var facing : Vector3 = -character_body.global_basis.z
+	facing.y = 0.0
+	facing = facing.normalized()
+
+	if is_facing_locked:
+		## There are no strafe clips, past the side it plays the backward walk
+		_set_gait(_running, facing.dot(direction) < -0.3)
+		_apply_velocity(direction * current_speed * minf(input.length(), 1.0), delta)
+		return
+
+	_set_gait(_running, false)
+	_face_direction(direction, delta)
+	facing = -character_body.global_basis.z
 	facing.y = 0.0
 	facing = facing.normalized()
 	## Walking along the facing, and only once it points roughly at the input,

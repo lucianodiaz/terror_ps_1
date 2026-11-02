@@ -21,8 +21,14 @@ enum Type { MELEE, RANGED }
 @export_group("Animation")
 ## Pose held while aiming, from the player's AnimationPlayer library
 @export var aim_animation: StringName = &""
-## Played once per attack on top of the aim pose, empty plays nothing
+## Walk cycle with the weapon raised, played in reverse when walking backwards.
+## Empty slides the aim pose instead.
+@export var aim_walk_animation: StringName = &""
+## Played once per attack standing still, on the whole body. Empty plays nothing
 @export var attack_animation: StringName = &""
+## Played once per attack while moving, only on the upper body so the legs keep
+## the aim walk. Empty falls back to attack_animation
+@export var attack_walk_animation: StringName = &""
 
 @export_group("Combat")
 @export var damage: float = 10.0
@@ -33,6 +39,8 @@ enum Type { MELEE, RANGED }
 @export_group("Melee")
 ## Seconds after the attack starts where the hitbox is active, x = start, y = end
 @export var hit_window: Vector2 = Vector2(0.25, 0.55)
+## Damage scale of a swing that starts at full aim walking speed, standing still deals full damage
+@export_range(0.0, 1.0, 0.01) var moving_damage_multiplier: float = 0.6
 
 @export_group("Ranged")
 ## Item consumed when combining it with the weapon in the menu
@@ -41,7 +49,13 @@ enum Type { MELEE, RANGED }
 ## Rounds loaded when the weapon is picked up
 @export_range(0, 99) var initial_loaded: int = 0
 @export_range(0.0, 100.0, 0.1, "suffix:m") var fire_range: float = 30.0
+## Widest yaw deviation of a shot fired at full aim walking speed, standing still shoots straight
+@export_range(0.0, 45.0, 0.1, "suffix:°") var moving_spread: float = 10.0
 
 
 func is_ranged() -> bool:
 	return type == Type.RANGED
+
+
+func get_attack_walk_animation() -> StringName:
+	return attack_walk_animation if attack_walk_animation != &"" else attack_animation

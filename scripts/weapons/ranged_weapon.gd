@@ -10,6 +10,9 @@ extends Weapon
 ## Where the ray starts, falls back to the weapon's origin
 @export var muzzle: Node3D
 
+## Set by the player from its movement before each shot, radians either side of the facing
+var spread: float = 0.0
+
 ## use() comes from input, the space state is only safe to query during physics
 var _shot_pending: bool = false
 
@@ -54,7 +57,8 @@ func _get_aim_direction() -> Vector3:
 	var source: Node3D = instigator as Node3D if instigator is Node3D else self
 	var forward: Vector3 = -source.global_basis.z
 	forward.y = 0.0
-	return forward.normalized() if forward.length_squared() > 0.0001 else Vector3.FORWARD
+	forward = forward.normalized() if forward.length_squared() > 0.0001 else Vector3.FORWARD
+	return forward.rotated(Vector3.UP, randf_range(-spread, spread))
 
 
 func _get_excluded_rids() -> Array[RID]:
