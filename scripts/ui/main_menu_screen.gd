@@ -85,6 +85,7 @@ func _on_button_pressed(index: int) -> void:
 		0:
 			close()
 			SaveManager.new_game()
+			AudioManager.stop_bgm(0.8)
 		1:
 			## The menu stays open under the LoadScreen, cancelling comes back here.
 			## Deferred so this same press doesn't reach the LoadScreen and pick a slot

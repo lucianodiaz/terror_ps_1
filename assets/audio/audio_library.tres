@@ -6,6 +6,6 @@
 [resource]
 script = ExtResource("1_0mnfe")
 tracks = Dictionary[String, AudioStream]({
-"dark_room": ExtResource("2_i50kr")
+"theme_menu": ExtResource("2_i50kr")
 })
 metadata/_custom_type_script = "uid://c1og4lkbqqdny"

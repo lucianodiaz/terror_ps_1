@@ -24,6 +24,7 @@ var _time: float = 0.0
 func _ready() -> void:
 	## The world hides the cursor, coming back to the title has to show it again
 	# Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	AudioManager.play_bgm("theme_menu",0.2)
 	if camera:
 		_camera_rotation = camera.rotation
 	if tv_light:

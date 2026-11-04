@@ -2,11 +2,16 @@
 ## script is both the controller and the root of the view.
 ## Moving up from the top row of the grid reaches ARCHIVO / MAPA, and from
 ## there SALIDA, like the original menu.
+## The mouse works like in the other menus: hovering a slot, command or button
+## selects it and only a click on it presses it. The right button backs out.
 extends CanvasLayer
 
 enum State { CLOSED, BROWSE, COMMANDS, COMBINE_TARGET, CHECK, FILES, READING }
 enum Focus { GRID, EXIT, FILES, MAP }
 enum Command { USE, COMBINE, CHECK }
+
+## Same order as _buttons
+const BUTTON_FOCUS: Array[Focus] = [Focus.EXIT, Focus.FILES, Focus.MAP]
 
 const GRID_COLUMNS: int = 2
 const GRID_ROWS: int = 4
@@ -34,6 +39,11 @@ const EMPTY_FILE_COLOR : Color = Color(0.3, 0.3, 0.33)
 const AMOUNT_COLOR : Color = Color(0.3, 1.0, 0.4)
 const EQUIPPED_COLOR : Color= Color(1.0, 0.85, 0.3)
 
+const FONT_SIZE: int = 40
+const FONT_COLOR: Color = Color(0.92, 0.94, 1.0)
+const BUTTON_HEIGHT: float = 70.0
+
+
 ## Health ratio thresholds, checked from the top, the first one that fits wins
 const CONDITIONS: Array[Dictionary] = [
 	{ "min": 0.66, "text": "Bien", "color": Color(0.25, 1.0, 0.35), "bpm": 60.0 },
@@ -42,14 +52,15 @@ const CONDITIONS: Array[Dictionary] = [
 	{ "min": 0.1, "text": "Peligro", "color": Color(1.0, 0.2, 0.2), "bpm": 135.0 },
 ]
 
+
 @onready var _grid: GridContainer = %Grid
 @onready var _status_label: Label = %StatusLabel
 @onready var _ecg: EcgMonitor = %Ecg
 @onready var _equip_icon: TextureRect = %EquipIcon
 @onready var _equip_name: Label = %EquipName
-@onready var _exit_button: Label = %ExitButton
-@onready var _files_button: Label = %FilesButton
-@onready var _map_button: Label = %MapButton
+@onready var _exit_button: Button = %ExitButton
+@onready var _files_button: Button = %FilesButton
+@onready var _map_button: Button = %MapButton
 @onready var _commands: Panel = %Commands
 @onready var _cmd_labels: Array[Label] = [%Use, %Combine, %Check]
 @onready var _preview_panel: Panel = %PreviewPanel
@@ -89,15 +100,35 @@ var _button_focused: StyleBoxFlat = null
 var _amount_settings: LabelSettings = null
 var is_player_dead: bool = false
 
+var _buttons: Array[Button] = []
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_styles()
 	_build_slots()
 	_build_file_slots()
+	_buttons.append(_exit_button)
+	_buttons.append(_files_button)
+	_buttons.append(_map_button)
 	Inventory.inventory_changed.connect(_on_inventory_changed)
 	Inventory.files_changed.connect(_on_inventory_changed)
 	Inventory.equipment_changed.connect(_on_equipment_changed)
 	visible = false
+	for i in _buttons.size():
+		var button: Button = _buttons[i]
+		_style_button(button)
+		## Hover moves the focus, so mouse and keys never highlight two buttons
+		button.mouse_entered.connect(_on_button_hovered.bind(i))
+		button.pressed.connect(_on_button_pressed.bind(i))
+	for i in _cmd_labels.size():
+		var label: Label = _cmd_labels[i]
+		label.mouse_filter = Control.MOUSE_FILTER_STOP
+		label.mouse_entered.connect(_on_command_hovered.bind(i))
+		label.gui_input.connect(_on_command_input.bind(i))
+	_files_prev.mouse_filter = Control.MOUSE_FILTER_STOP
+	_files_prev.gui_input.connect(_on_files_arrow_input.bind(-1))
+	_files_next.mouse_filter = Control.MOUSE_FILTER_STOP
+	_files_next.gui_input.connect(_on_files_arrow_input.bind(1))
 
 
 func is_open() -> bool:
@@ -126,6 +157,7 @@ func open() -> void:
 	visible = true
 	get_tree().paused = true
 	_refresh()
+	Cursor.cursor_visibility = true
 
 
 func close() -> void:
@@ -134,7 +166,9 @@ func close() -> void:
 	_state = State.CLOSED
 	_reader.visible = false
 	visible = false
+	get_viewport().gui_release_focus()
 	get_tree().paused = false
+	Cursor.cursor_visibility = false
 
 
 func _input(event: InputEvent) -> void:
@@ -150,7 +184,17 @@ func _input(event: InputEvent) -> void:
 		return
 	if not is_open():
 		return
+	if event is InputEventMouse and not _reads_mouse(event):
+		return
 	_handle_open_input(event)
+
+
+## The rest of the mouse is left to the slots and buttons, a click outside
+## them does nothing. The check and reader screens take a click anywhere
+func _reads_mouse(event: InputEventMouse) -> bool:
+	if event.is_action_pressed("cancel"):
+		return true
+	return event is InputEventMouseButton and (_state == State.CHECK or _state == State.READING)
 
 
 func _handle_open_input(event: InputEvent) -> void:
@@ -182,8 +226,11 @@ func _handle_browse(event: InputEvent) -> void:
 		_status = ""
 		_refresh()
 		return
-	if not event.is_action_pressed("action"):
-		return
+	if event.is_action_pressed("action"):
+		_activate_focus()
+
+
+func _activate_focus() -> void:
 	match _focus:
 		Focus.GRID:
 			if Inventory.get_slot(_cursor).is_empty():
@@ -283,17 +330,21 @@ func _move_file_cursor(event: InputEvent) -> bool:
 	return true
 
 
+## A click on the back arrow goes back, anywhere else it moves forward
 func _handle_reading(event: InputEvent) -> void:
 	var last: bool = _reader_page >= _reader_pages.size() - 1
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	var back_clicked: bool = click != null and click.is_action_pressed("action") \
+		and _reader_prev.visible and _reader_prev.get_global_rect().has_point(click.position)
 	if event.is_action_pressed("cancel"):
 		_close_reader()
+	elif back_clicked or (event.is_action_pressed("left") and _reader_page > 0):
+		_show_reader_page(_reader_page - 1, -1)
 	elif event.is_action_pressed("right") or event.is_action_pressed("action"):
 		if last:
 			_close_reader()
 		else:
 			_show_reader_page(_reader_page + 1, 1)
-	elif event.is_action_pressed("left") and _reader_page > 0:
-		_show_reader_page(_reader_page - 1, -1)
 
 
 func _open_reader(index: int) -> void:
@@ -445,6 +496,9 @@ func _set_state(new_state: State) -> void:
 	_preview_panel.visible = _state == State.CHECK
 	_files_panel.visible = _state == State.FILES
 	_reader.visible = _state == State.READING
+	## Outside BROWSE a click on a button would steal the focus without doing anything
+	for button in _buttons:
+		button.mouse_filter = Control.MOUSE_FILTER_STOP if _state == State.BROWSE else Control.MOUSE_FILTER_IGNORE
 	if _file_cursor >= Inventory.files.size():
 		_file_cursor = maxi(Inventory.files.size() - 1, 0)
 
@@ -478,16 +532,116 @@ func _refresh_equipment() -> void:
 	_equip_name.text = data.display_name if data and data.icon == null else ""
 
 
+## The focused look is the button's own focus, ARCHIVO keeps it while the files are open
 func _refresh_buttons() -> void:
-	var browsing: bool = _state == State.BROWSE
-	_set_button_focus(_exit_button, browsing and _focus == Focus.EXIT)
-	var in_files: bool = _state == State.FILES or _state == State.READING
-	_set_button_focus(_files_button, (browsing and _focus == Focus.FILES) or in_files)
-	_set_button_focus(_map_button, browsing and _focus == Focus.MAP)
+	var button: Button = null
+	if _state == State.BROWSE and _focus != Focus.GRID:
+		button = _buttons[BUTTON_FOCUS.find(_focus)]
+	elif _state == State.FILES or _state == State.READING:
+		button = _files_button
+	if button:
+		button.grab_focus()
+	else:
+		get_viewport().gui_release_focus()
 
 
-func _set_button_focus(button: Label, focused: bool) -> void:
-	button.add_theme_stylebox_override("normal", _button_focused if focused else _button_normal)
+func _on_button_hovered(index: int) -> void:
+	if _state != State.BROWSE or _focus == BUTTON_FOCUS[index]:
+		return
+	_focus = BUTTON_FOCUS[index]
+	_status = ""
+	_refresh()
+
+
+func _on_button_pressed(index: int) -> void:
+	if _state != State.BROWSE:
+		return
+	_focus = BUTTON_FOCUS[index]
+	_activate_focus()
+
+
+func _on_slot_hovered(index: int) -> void:
+	if _state != State.BROWSE and _state != State.COMBINE_TARGET:
+		return
+	if _focus == Focus.GRID and _cursor == index:
+		return
+	_cursor = index
+	_focus = Focus.GRID
+	if _state == State.BROWSE:
+		_status = ""
+	_refresh()
+
+
+func _on_slot_input(event: InputEvent, index: int) -> void:
+	if not event.is_action_pressed("action"):
+		return
+	match _state:
+		State.BROWSE:
+			_on_slot_hovered(index)
+			_activate_focus()
+		State.COMBINE_TARGET:
+			_on_slot_hovered(index)
+			_finish_combine()
+
+
+func _on_command_hovered(index: int) -> void:
+	if _state != State.COMMANDS or _command == index:
+		return
+	_command = index as Command
+	_refresh()
+
+
+func _on_command_input(event: InputEvent, index: int) -> void:
+	if _state != State.COMMANDS or not event.is_action_pressed("action"):
+		return
+	_command = index as Command
+	_run_command()
+
+
+func _on_file_hovered(index: int) -> void:
+	if _state != State.FILES:
+		return
+	var file_index: int = floori(_file_cursor / float(FILES_PER_PAGE)) * FILES_PER_PAGE + index
+	## Empty slots can't be selected
+	if file_index == _file_cursor or file_index >= Inventory.files.size():
+		return
+	_file_cursor = file_index
+	_refresh()
+
+
+func _on_file_input(event: InputEvent, index: int) -> void:
+	if _state != State.FILES or not event.is_action_pressed("action"):
+		return
+	var file_index: int = floori(_file_cursor / float(FILES_PER_PAGE)) * FILES_PER_PAGE + index
+	if file_index < Inventory.files.size():
+		_file_cursor = file_index
+		_open_reader(file_index)
+
+
+## step is -1 for the previous page and 1 for the next one
+func _on_files_arrow_input(event: InputEvent, step: int) -> void:
+	if _state != State.FILES or not event.is_action_pressed("action"):
+		return
+	var page: int = floori(_file_cursor / float(FILES_PER_PAGE)) + step
+	if page < 0 or page * FILES_PER_PAGE >= Inventory.files.size():
+		return
+	_file_cursor = page * FILES_PER_PAGE
+	_refresh()
+
+
+func _style_button(button: Button) -> void:
+	button.custom_minimum_size.y = BUTTON_HEIGHT
+	button.add_theme_font_size_override("font_size", FONT_SIZE)
+	for color_name in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		button.add_theme_color_override(color_name, FONT_COLOR)
+	button.add_theme_color_override("font_outline_color", Color.BLACK)
+	button.add_theme_constant_override("outline_size", 6)
+	## Hover alone keeps the normal look, hovering already moves the focus
+	button.add_theme_stylebox_override("normal", _button_normal)
+	button.add_theme_stylebox_override("hover", _button_normal)
+	button.add_theme_stylebox_override("pressed", _button_focused)
+	button.add_theme_stylebox_override("hover_pressed", _button_focused)
+	button.add_theme_stylebox_override("focus", _button_focused)
 
 
 func _refresh_slots() -> void:
@@ -647,9 +801,12 @@ func _build_slots() -> void:
 		var panel: Panel = Panel.new()
 		panel.custom_minimum_size = SLOT_SIZE
 		panel.add_theme_stylebox_override("panel", _slot_normal)
+		panel.mouse_entered.connect(_on_slot_hovered.bind(i))
+		panel.gui_input.connect(_on_slot_input.bind(i))
 
 		var icon: TextureRect = TextureRect.new()
 		icon.name = "Icon"
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		panel.add_child(icon)
@@ -694,9 +851,12 @@ func _build_file_slots() -> void:
 		var panel: Panel = Panel.new()
 		panel.custom_minimum_size = FILE_SLOT_SIZE
 		panel.add_theme_stylebox_override("panel", _slot_normal)
+		panel.mouse_entered.connect(_on_file_hovered.bind(i))
+		panel.gui_input.connect(_on_file_input.bind(i))
 
 		var icon: TextureRect = TextureRect.new()
 		icon.name = "Icon"
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		panel.add_child(icon)
