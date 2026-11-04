@@ -4,3 +4,9 @@
 
 [node name="StaminaComponent" type="Node" unique_id=512097122]
 script = ExtResource("1_rwupj")
+run_cost_per_second = 8.0
+melee_attack_cost = 15.0
+walk_regen_delay = 4.0
+walk_regen_rate = 6.0
+full_damage_ratio = 0.6
+min_damage_multiplier = 0.3

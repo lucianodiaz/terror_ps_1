@@ -32,7 +32,7 @@ const ROWS: Array[Dictionary] = [
 ]
 
 ## Same order as GameSettings.WINDOW_MODES
-const WINDOW_MODE_NAMES: Array[String] = ["WINDOWED", "FULLSCREEN"]
+const WINDOW_MODE_NAMES: Array[String] = ["WINDOWED", "FULLSCREEN", "EXCLUSIVE"]
 const VOLUME_STEP: float = 0.1
 const ROW_HEIGHT: float = 62.0
 const VALUE_WIDTH: float = 340.0

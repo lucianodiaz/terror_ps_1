@@ -2,7 +2,7 @@
 extends BTAction
 
 ## The OneShot needs a frame to report itself active
-const START_GRACE_TIME: float = 0.2
+const START_GRACE_TIME: float = 0.4
 
 @export var target_var: StringName = &"target"
 

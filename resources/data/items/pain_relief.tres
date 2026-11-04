@@ -15,7 +15,6 @@ item_id = "pain_relief"
 display_name = "Medicamento para el dolor"
 description = "Medicamento para el dolor"
 icon = ExtResource("1_udsc0")
-max_stack = 5
 use_effects = Array[ExtResource("5_effect")]([SubResource("Resource_heal")])
 consume_on_use = true
 model = ExtResource("2_uuc1u")

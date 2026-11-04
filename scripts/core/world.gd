@@ -33,6 +33,7 @@ func _ready() -> void:
 		return
 	
 	player.on_player_died.connect(_on_player_died)
+	AudioManager.stop_bgm(0.8)
 
 func _on_player_died() -> void:
 	DeathScreen.open()
